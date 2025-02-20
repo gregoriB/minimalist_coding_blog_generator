@@ -1,0 +1,36 @@
+#side-bar {
+  width: 16vw;
+  height: 100%;
+  background-color: var(--bg-color);
+}
+
+#side-bar h2 {
+  text-align: center;
+  padding: 1rem;
+}
+
+#side-bar .articles-by-date {
+  text-align: center;
+  margin: 0 auto;
+}
+
+#side-bar .articles-by-date {
+  margin-top: 4rem;
+}
+
+#side-bar .articles-by-date ul {
+  padding: 0;
+}
+
+#side-bar .articles-by-date ul li {
+  margin: 1rem;
+  padding: 0;
+  text-align: center;
+  list-style-type: none;
+}
+
+#side-bar .articles-by-date ul li a {
+  text-decoration: none;
+  color: var(--primary-color);
+  font-weight: bold;
+}

@@ -1,0 +1,64 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap");
+
+:root {
+  --main-bg-color: gray;
+  --main-font-color: white;
+  --default-gap: 2rem;
+  --primary-color: #302ae6;
+  --secondary-color: #536390;
+  --font-color: #424242;
+  --bg-color: #fff;
+  --heading-color: #292922;
+}
+
+[data-theme="dark"] {
+  --primary-color: #9a97f3;
+  --secondary-color: #818cab;
+  --font-color: #e1e1ff;
+  --bg-color: #161625;
+  --heading-color: #818cab;
+}
+
+body {
+  font-family: "Roboto Slab", serif;
+  font-optical-sizing: auto;
+  font-weight: <weight>;
+  font-style: normal;
+  /* font-family: "Lato", sans-serif; */
+  /* font-size: 18px; */
+  background-color: var(--bg-color);
+  height: 5000px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+}
+
+header {
+  color: var(--font-color);
+  background-color: var(--bg-color);
+  padding: 2rem 0;
+  width: 100%;
+  height: 10vh;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.content-container {
+  color: var(--font-color);
+  height: 100%;
+  width: 100%;
+  max-width: calc(1360px);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-item: center;
+  margin: 0 auto;
+  padding-right: 12vw;
+}
+
+code {
+  scrollbar-color: var(--bg-color) var(--font-color);
+  scrollbar-width: thin;
+}
