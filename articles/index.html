@@ -7,28 +7,28 @@
 
     <title>gregori.dev</title>
 
-    <link rel="stylesheet" href="styles/style.css" />
-    <link rel="stylesheet" href="styles/main_content.css" />
-    <link rel="stylesheet" href="styles/theme_toggle.css" />
-    <link rel="stylesheet" href="styles/side_bar.css" />
+    <link rel="stylesheet" href="../styles/style.css" />
+    <link rel="stylesheet" href="../styles/main_content.css" />
+    <link rel="stylesheet" href="../styles/theme_toggle.css" />
+    <link rel="stylesheet" href="../styles/side_bar.css" />
 
-    <link id="hljs-theme" rel="stylesheet" href="libs/highlight/styles/atom-one-light.css">
-    <script src="libs/highlight/highlight.min.js" defer></script>
+    <link id="hljs-theme" rel="stylesheet" href="../libs/highlight/styles/atom-one-light.css">
+    <script src="../libs/highlight/highlight.min.js" defer></script>
 
-    <link rel="stylesheet" href="libs/highlight_copy_button/styles/styles.css">
-    <script src="libs/highlight_copy_button/highlight-copy.min.js" defer></script>
+    <link rel="stylesheet" href="../libs/highlight_copy_button/styles/styles.css">
+    <script src="../libs/highlight_copy_button/highlight-copy.min.js" defer></script>
 
-    <script src="scripts/libs.js" defer></script>
-    <script src="scripts/theme_toggle.js" defer></script>
+    <script src="../scripts/libs.js" defer></script>
+    <script src="../scripts/theme_toggle.js" defer></script>
 
   </head>
   <body>
 
-    <header>
+    <header id="site-banner">
       <h1>gregori.dev</h1>
       <div class="theme-switch-wrapper">
         <label class="theme-switch" for="checkbox">
-          <input type="checkbox" id="checkbox" />
+          <input type="checkbox" id="checkbox">
           <div class="slider round"></div>
         </label>
         <em>toggle theme</em>
@@ -36,28 +36,24 @@
     </header>
 
     <section class="content-container">
-      <section id="side-bar">
+      <section id="side-bar" data-find="side-bar">
         <h2>More Articles</h2>
-        <section class="articles-by-date">
-          <h3>February 2025</h3>
-          <ul>
-            <li><a href="feb_2025_how_i_went_from_frontend_development_to_a_programming.html">How I went from a front-end developer to a programmer</a></li>
-            <li><a href="feb_2025_something_about_the_terrible_reality_of_ai.html">Something about the terrible reality of AI</a></li>
+        <section class="articles-by-date" data-find="side-bar-section" data-date="mar-2025">
+          <h3>March 2025</h3>
+          <ul data-find="side-bar-list">
+            <li><a href="mar_2025_this_is_two.html">This is two</a></li>
           </ul>
         </section>
-
-        <section class="articles-by-date">
-          <h3>January 2025</h3>
-          <ul>
-            <li><a href="#">Filter articles are still articles!</a></li>
-            <li><a href="#">Google is a monster</a></li>
-            <li><a href="#">Things I wish I knew when starting out</a></li>
+        <section class="articles-by-date" data-find="side-bar-section" data-date="feb-2025">
+          <h3>February 2025</h3>
+          <ul data-find="side-bar-list">
+            <li><a href="feb_2025_this_is_one.html">This is one</a></li>
           </ul>
         </section>
       </section>
-      <section id="main-content">
-        <h2>How I went from front-end development to a programming</h2>
-        <time datetime="2018-07-07">February 20th, 2025</time>
+      <section id="main-content" data-find="main-content">
+        <h2 data-find="main-content-title">This is Two</h2>
+        <time datetime="2018-07-07">March 20th, 2025</time>
         <article>
           <p>
             Lectus senectus faucibus pulvinar mattis imperdiet quisque lacus?

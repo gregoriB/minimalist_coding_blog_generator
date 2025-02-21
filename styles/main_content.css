@@ -10,9 +10,10 @@
 }
 
 #main-content h2 {
+  font-weight: 600;
   color: var(--heading-color);
   text-align: center;
-  font-size: 3rem;
+  font-size: 4rem;
 }
 
 #main-content time {
@@ -20,6 +21,7 @@
 }
 
 #main-content article {
+  font-weight: 400;
   margin: 0 auto;
   padding: 4rem;
   text-align: justify;

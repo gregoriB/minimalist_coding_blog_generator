@@ -1,4 +1,72 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap");
+@font-face {
+  font-family: "Roboto Slab";
+  src: url("static/RobotoSlab-Thin.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roboto Slab";
+  src: url("static/RobotoSlab-ExtraLight.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roboto Slab";
+  src: url("static/RobotoSlab-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roboto Slab";
+  src: url("static/RobotoSlab-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roboto Slab";
+  src: url("static/RobotoSlab-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roboto Slab";
+  src: url("static/RobotoSlab-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roboto Slab";
+  src: url("static/RobotoSlab-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roboto Slab";
+  src: url("static/RobotoSlab-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roboto Slab";
+  src: url("static/RobotoSlab-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Russo One";
+  src: url("static/RussoOne-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
 
 :root {
   --main-bg-color: gray;
@@ -22,10 +90,8 @@
 body {
   font-family: "Roboto Slab", serif;
   font-optical-sizing: auto;
-  font-weight: <weight>;
+  font-weight: normal;
   font-style: normal;
-  /* font-family: "Lato", sans-serif; */
-  /* font-size: 18px; */
   background-color: var(--bg-color);
   height: 5000px;
   display: flex;
@@ -35,7 +101,9 @@ body {
   margin: 0;
 }
 
-header {
+#site-banner {
+  font-weight: 200;
+  font-size: 1.3rem;
   color: var(--font-color);
   background-color: var(--bg-color);
   padding: 2rem 0;
@@ -43,6 +111,12 @@ header {
   height: 10vh;
   margin: 0 auto;
   text-align: center;
+}
+
+#site-banner h1 {
+  font-family: "Russo One", serif;
+  opacity: 0.2;
+  font-weight: 700;
 }
 
 .content-container {
