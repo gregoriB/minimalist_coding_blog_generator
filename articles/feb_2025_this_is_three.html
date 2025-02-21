@@ -13,23 +13,31 @@
     <link rel="stylesheet" href="../styles/theme_toggle.css" />
     <link rel="stylesheet" href="../styles/side_bar.css" />
 
-    <link id="hljs-theme" rel="stylesheet" href="../libs/highlight/styles/atom-one-light.css">
-    <script src="../libs/highlight/highlight.min.js" defer></script>
+    <link
+      id="hljs-theme"
+      rel="stylesheet"
+      href="../libs/highlight/styles/atom-one-light.css"
+    />
+    <script src="../libs/highlight/highlight.min.js" defer=""></script>
 
-    <link rel="stylesheet" href="../libs/highlight_copy_button/styles/styles.css">
-    <script src="../libs/highlight_copy_button/highlight-copy.min.js" defer></script>
+    <link
+      rel="stylesheet"
+      href="../libs/highlight_copy_button/styles/styles.css"
+    />
+    <script
+      src="../libs/highlight_copy_button/highlight-copy.min.js"
+      defer=""
+    ></script>
 
-    <script src="../scripts/libs.js" defer></script>
-    <script src="../scripts/theme_toggle.js" defer></script>
-
+    <script src="../scripts/libs.js" defer=""></script>
+    <script src="../scripts/theme_toggle.js" defer=""></script>
   </head>
   <body>
-
     <header id="site-banner">
       <h1>gregori.dev</h1>
       <div class="theme-switch-wrapper">
         <label class="theme-switch" for="checkbox">
-          <input type="checkbox" id="checkbox">
+          <input type="checkbox" id="checkbox" />
           <div class="slider round"></div>
         </label>
         <em>toggle theme</em>
@@ -39,13 +47,21 @@
     <section class="content-container">
       <section id="side-bar" data-find="side-bar">
         <h2>More Articles</h2>
-        <section class="articles-by-date" data-find="side-bar-section" data-date="feb-2025">
+        <section
+          class="articles-by-date"
+          data-find="side-bar-section"
+          data-date="feb-2025"
+        >
           <h3>February 2025</h3>
           <ul data-find="side-bar-list">
             <li><a href="feb_2025_this_is_three.html">This is Three</a></li>
           </ul>
         </section>
-        <section class="articles-by-date" data-find="side-bar-section" data-date="jan-2025">
+        <section
+          class="articles-by-date"
+          data-find="side-bar-section"
+          data-date="jan-2025"
+        >
           <h3>January 2025</h3>
           <ul data-find="side-bar-list">
             <li><a href="jan_2025_this_is_two.html">This is Two</a></li>
@@ -71,7 +87,7 @@
             consectetur.
           </p>
 
-        <pre><code>
+          <pre><code>
 #pragma once
 
 #include "../components.hpp"
@@ -79,34 +95,34 @@
 
 namespace Systems::Score
 {
-inline void cleanup(ComponentManager &cm)
+inline void cleanup(ComponentManager &amp;cm)
 {
 }
 
-inline auto update(ComponentManager &cm)
+inline auto update(ComponentManager &amp;cm)
 {
-    auto [scoreEventSet] = cm.getAll<ScoreEvent>();
-    scoreEventSet.each([&](EId eId, auto &scoreEvents) {
-        scoreEvents.inspect([&](const ScoreEvent &scoreEvent) {
-            auto [pointsComps] = cm.get<PointsComponent>(scoreEvent.pointsId);
+    auto [scoreEventSet] = cm.getAll<scoreevent>();
+    scoreEventSet.each([&amp;](EId eId, auto &amp;scoreEvents) {
+        scoreEvents.inspect([&amp;](const ScoreEvent &amp;scoreEvent) {
+            auto [pointsComps] = cm.get<pointscomponent>(scoreEvent.pointsId);
             if (!pointsComps)
                 return;
 
             auto [points, multiplier] =
-                pointsComps.peek(&PointsComponent::points, &PointsComponent::multiplier);
-            auto [scoreComps] = cm.get<ScoreComponent>(eId);
-            scoreComps.mutate([&](ScoreComponent &scoreComp) { scoreComp.score += (points * multiplier); });
+                pointsComps.peek(&amp;PointsComponent::points, &amp;PointsComponent::multiplier);
+            auto [scoreComps] = cm.get<scorecomponent>(eId);
+            scoreComps.mutate([&amp;](ScoreComponent &amp;scoreComp) { scoreComp.score += (points * multiplier); });
 
-            auto [playerId, _] = cm.getUnique<PlayerComponent>();
+            auto [playerId, _] = cm.getUnique<playercomponent>();
             if (eId == playerId)
-                cm.add<UIEvent>(eId, UIEvents::UPDATE_SCORE);
+                cm.add<uievent>(eId, UIEvents::UPDATE_SCORE);
         });
     });
 
     return cleanup;
 }
 }; // namespace Systems::Score
-        </code></pre>
+        </uievent></playercomponent></scorecomponent></pointscomponent></scoreevent></code></pre>
           <p>
             Lorem arcu class est phasellus ipsum mattis euismod. Facilisi nisl
             iaculis ad maecenas fames. Ante sed justo justo dolor fusce praesent
@@ -154,6 +170,5 @@ inline auto update(ComponentManager &cm)
         </article>
       </section>
     </section>
-
   </body>
 </html>

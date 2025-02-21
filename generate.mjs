@@ -15,10 +15,6 @@ async function query(dom, selector) {
   return dom.window.document.querySelector(selector);
 }
 async function insertLinkIntoFiles() {
-  const indexSideBarSection = await query(
-    indexDom,
-    "[data-find='side-bar-section']",
-  );
   const files = fs.readdirSync(folderPath);
   for (const file of files) {
     if (file == mainHtml) continue;
@@ -26,29 +22,18 @@ async function insertLinkIntoFiles() {
     const filePath = path.join(folderPath, file);
     if (fs.statSync(filePath).isFile() && filePath.endsWith(".html")) {
       const dom = await JSDOM.fromFile(filePath);
-      const element = await query(dom, "[data-find='side-bar-section']");
-      const elDate = element.dataset.date;
-      const indexDate = indexSideBarSection.dataset.date;
-      if (!noLinkGen && !noGen) {
-        if (elDate != indexDate) {
-          console.log("Creating new date block and link");
-          element.parentNode.insertBefore(
-            indexSideBarSection.cloneNode(true),
-            element,
-          );
-        } else {
-          console.log("Creating new date link");
-          const content = indexSideBarSection.querySelector(
-            "[data-find='side-bar-list'] li",
-          );
-          const elementList = element.querySelector(
-            "[data-find='side-bar-list']",
-          );
-          elementList.innerHTML = content.outerHTML + elementList.innerHTML;
-        }
-      }
-
-      if (noGen || noFileGen) return;
+      let existingHTML = await query(dom, "html");
+      let existingArticle = existingHTML.querySelector(
+        "[data-find='main-content']",
+      );
+      const clone = existingArticle.cloneNode(true);
+      const indexHtml = await query(indexDom, "html");
+      existingHTML.innerHTML = indexHtml.innerHTML;
+      existingHTML = await query(dom, "html");
+      existingArticle = existingHTML.querySelector(
+        "[data-find='main-content']",
+      );
+      existingArticle.outerHTML = clone.outerHTML;
 
       fs.writeFileSync(filePath, dom.serialize(), "utf8");
       console.log(`Updated ${file}`);
