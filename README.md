@@ -1,4 +1,4 @@
-# Blog Site
+# Minimalist Code Blog Generator
 
 Minimalist developer blog site with syntax highlighting and a persistent light/dark theme toggle
 
