@@ -1,5 +1,7 @@
 [![Netlify Status](https://api.netlify.com/api/v1/badges/8006df7f-06b3-4949-8d3e-1f2e6b02b1dd/deploy-status)](https://app.netlify.com/sites/gregoridev/deploys)
 
+[Demo site][demo_url]
+
 # Minimalist Code Blog Generator
 
 Minimalist developer blog site with syntax highlighting and a persistent light/dark theme toggle
@@ -25,3 +27,7 @@ Minimalist developer blog site with syntax highlighting and a persistent light/d
 - There isn't much freedom, which is by design. Anything can be posted in the article section, but that's it
 - Everything is hardcoded into the index.html file
 - There is not yet any kind of backup mechanism for articles, so use version control and check your diffs!
+
+[//]: # ()
+
+   [demo_url]: <https://gregoridev.netlify.app/>
