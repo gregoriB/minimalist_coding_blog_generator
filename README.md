@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/8006df7f-06b3-4949-8d3e-1f2e6b02b1dd/deploy-status)](https://app.netlify.com/sites/gregoridev/deploys)
+
 # Minimalist Code Blog Generator
 
 Minimalist developer blog site with syntax highlighting and a persistent light/dark theme toggle
