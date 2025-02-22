@@ -2,18 +2,29 @@
 
 [Demo site][demo_url]
 
-# Minimalist Code Blog Generator
+# Minimalist Coding Blog Generator
 
-Minimalist developer blog site with syntax highlighting and a persistent light/dark theme toggle
+Minimalist developer blog site with syntax highlighting and a persistent light/dark theme toggle.  Utilizes a template and a basic script to auto-generate new HTML files for blog posts.
+
+The goal is to use at little JS as possible in the client to deliver a good reader experience.  JS is mainly used for theme toggling at this time because I consider that a necessary modern feature of a coding blog site.
 
 ## Dependences
 
 - Highlightjs - Adds auto-detected syntax highlighting for code
 - Highlightjs-copy - Adds a copy button for code blocks
+- NodeJS or an equivelant JS runtime
 
 ## Use
 
-- The index.html file is a blog template with a sidebar for article links
+Update the article contents in the `index.html` file with new blog post, update the sidebar links,
+and run the node script:
+```sh
+$ node generate.mjs
+```
+
+## Notes
+
+- The index.html file is a blog template with a sidebar for article links and a header
 - The `generate.mjs` node script creates a new html file from index.html
   - The new html file is name from the article title
   - The the most recent month and year from the sidebar are prepended to the, eg: feb_2025_article_title.html
@@ -28,6 +39,20 @@ Minimalist developer blog site with syntax highlighting and a persistent light/d
 - Everything is hardcoded into the index.html file
 - There is not yet any kind of backup mechanism for articles, so use version control and check your diffs!
 
-[//]: # ()
+## Planned Features
 
-   [demo_url]: <https://gregoridev.netlify.app/>
+- Social media links, possibly in the footer or sidebar
+- A way to use JSON or some other format to store blog articles and auto-generate new posts and links from that
+    * This planned feature is up in the air, because I don't want to make it too easy to create AI slop blogs
+- Some way to handle scaling the sidebar with article links
+    * It shouldn't grow longer and longer forever. It would need to partially collapse or link to a new page with more articles
+
+## Contributions
+
+I'll accept contributions to fix bugs, but new unplanned features may be rejected on the grounds that the blog site is supposed to be very minimal.  Personally, if I ever need to scale this up to something that is not so minimal, I'll fork it and go from there.
+
+Please run the prettier script before submitting a pull request.
+
+
+[//]: #
+[demo_url]: https://gregoridev.netlify.app/

@@ -24,10 +24,10 @@ body {
   text-align: center;
 }
 
-#site-banner h1 {
-  font-family: "Russo One", serif;
+#site-banner #logo {
   opacity: 0.2;
-  font-weight: 700;
+  filter: drop-shadow(1.5px 0px 0px var(--font-color));
+  width: 15rem;
 }
 
 .content-container {

@@ -1,43 +1,33 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <title>gregori.dev</title>
 
-    <link rel="stylesheet" href="../styles/variables.css" />
-    <link rel="stylesheet" href="../styles/style.css" />
-    <link rel="stylesheet" href="../styles/main_content.css" />
-    <link rel="stylesheet" href="../styles/theme_toggle.css" />
-    <link rel="stylesheet" href="../styles/side_bar.css" />
+    <link rel="stylesheet" href="../styles/variables.css">
+    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="stylesheet" href="../styles/main_content.css">
+    <link rel="stylesheet" href="../styles/theme_toggle.css">
+    <link rel="stylesheet" href="../styles/side_bar.css">
 
-    <link
-      id="hljs-theme"
-      rel="stylesheet"
-      href="../libs/highlight/styles/atom-one-light.css"
-    />
+    <link id="hljs-theme" rel="stylesheet" href="../libs/highlight/styles/atom-one-light.css">
     <script src="../libs/highlight/highlight.min.js" defer=""></script>
 
-    <link
-      rel="stylesheet"
-      href="../libs/highlight_copy_button/styles/styles.css"
-    />
-    <script
-      src="../libs/highlight_copy_button/highlight-copy.min.js"
-      defer=""
-    ></script>
+    <link rel="stylesheet" href="../libs/highlight_copy_button/styles/styles.css">
+    <script src="../libs/highlight_copy_button/highlight-copy.min.js" defer=""></script>
 
     <script src="../scripts/libs.js" defer=""></script>
     <script src="../scripts/theme_toggle.js" defer=""></script>
+
   </head>
   <body>
+
     <header id="site-banner">
-      <h1>gregori.dev</h1>
+        <h1><img src="../assets/images/logo.svg" alt="svg site logo" id="logo"></h1>
       <div class="theme-switch-wrapper">
         <label class="theme-switch" for="checkbox">
-          <input type="checkbox" id="checkbox" />
+          <input type="checkbox" id="checkbox">
           <div class="slider round"></div>
         </label>
         <em>toggle theme</em>
@@ -47,21 +37,13 @@
     <section class="content-container">
       <section id="side-bar" data-find="side-bar">
         <h2>More Articles</h2>
-        <section
-          class="articles-by-date"
-          data-find="side-bar-section"
-          data-date="feb-2025"
-        >
+        <section class="articles-by-date" data-find="side-bar-section" data-date="feb-2025">
           <h3>February 2025</h3>
           <ul data-find="side-bar-list">
             <li><a href="feb_2025_this_is_three.html">This is Three</a></li>
           </ul>
         </section>
-        <section
-          class="articles-by-date"
-          data-find="side-bar-section"
-          data-date="jan-2025"
-        >
+        <section class="articles-by-date" data-find="side-bar-section" data-date="jan-2025">
           <h3>January 2025</h3>
           <ul data-find="side-bar-list">
             <li><a href="jan_2025_this_is_two.html">This is Two</a></li>
@@ -87,7 +69,7 @@
             consectetur.
           </p>
 
-          <pre><code>
+        <pre><code>
 #pragma once
 
 #include "../components.hpp"
@@ -170,5 +152,7 @@ inline auto update(ComponentManager &amp;cm)
         </article>
       </section>
     </section>
-  </body>
-</html>
+
+  
+
+</body></html>

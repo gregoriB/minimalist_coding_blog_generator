@@ -2,32 +2,36 @@ import fs from "fs";
 import path from "path";
 import { JSDOM } from "jsdom";
 
-const args = process.argv;
-const noLinkGen = args.includes("-no-link-updates");
-const noFileGen = args.includes("-no-file-gen");
-const noGen = args.includes("-do-nothing");
-
-const mainHtml = "index.html";
-const folderPath = "./articles/";
-const indexDom = await JSDOM.fromFile(folderPath + mainHtml);
+const indexFile = "index.html";
+const articlesFolder = "./articles/";
+const indexDom = await JSDOM.fromFile(articlesFolder + indexFile);
 
 async function query(dom, selector) {
   return dom.window.document.querySelector(selector);
 }
-async function insertLinkIntoFiles() {
-  const files = fs.readdirSync(folderPath);
-  for (const file of files) {
-    if (file == mainHtml) continue;
 
-    const filePath = path.join(folderPath, file);
+/**
+ * Copies the blog article in each file, updates all of the HTML in that file
+ * with the HTML from index.html, and then replaces the blog article with the copy
+ * of the original from the current HTML file.
+ */
+async function updateFiles() {
+  const files = fs.readdirSync(articlesFolder);
+  for (const file of files) {
+    if (file == indexFile) continue;
+
+    const filePath = path.join(articlesFolder, file);
     if (fs.statSync(filePath).isFile() && filePath.endsWith(".html")) {
       const dom = await JSDOM.fromFile(filePath);
+      const indexHtml = await query(indexDom, "html");
       let existingHTML = await query(dom, "html");
+
+      // Clone existing article, update file html, query article node
+      // again, update node article html with the cloned article html
       let existingArticle = existingHTML.querySelector(
         "[data-find='main-content']",
       );
       const clone = existingArticle.cloneNode(true);
-      const indexHtml = await query(indexDom, "html");
       existingHTML.innerHTML = indexHtml.innerHTML;
       existingHTML = await query(dom, "html");
       existingArticle = existingHTML.querySelector(
@@ -36,7 +40,8 @@ async function insertLinkIntoFiles() {
       existingArticle.outerHTML = clone.outerHTML;
 
       fs.writeFileSync(filePath, dom.serialize(), "utf8");
-      console.log(`Updated ${file}`);
+
+      console.log(`UPDATED FILE: ${file}`);
     }
   }
 }
@@ -49,23 +54,23 @@ async function createNewFile() {
   );
   const date = `${sidebarSection.dataset.date}_`;
   const titleText = title.textContent;
-  let fileName = (date + titleText).toLowerCase().replace(/[^a-zA-Z0-9]/g, "_");
-  if (noGen || noFileGen) return;
+  // replace all special characters with "_" and set everything to lowercase
+  let fileName = `${(date + titleText).toLowerCase().replace(/[^a-zA-Z0-9]/g, "_")}.html`;
 
-  fs.writeFileSync(
-    `${folderPath + fileName}.html`,
-    indexDom.serialize(),
-    "utf8",
-  );
-  console.log(`${fileName} created`);
+  fs.writeFileSync(articlesFolder + fileName, indexDom.serialize(), "utf8");
+
+  console.log(`CREATED FILE: ${fileName}`);
 }
 
+/**
+ * Update existing HTML files with the data from index.html and create new blog html file
+ */
 async function processFiles() {
   try {
-    await insertLinkIntoFiles();
+    await updateFiles();
     await createNewFile();
   } catch (error) {
-    console.error("Error processing files:", error);
+    console.error("ERROR PROCESSING FILES:", error);
   }
 }
 
