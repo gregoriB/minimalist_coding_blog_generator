@@ -19,7 +19,7 @@ The goal is to use at little JS as possible in the client to deliver a good read
 Update the article contents in the `index.html` file with new blog post, update the sidebar links,
 and run the node script:
 ```sh
-$ node generate.mjs
+$ npm run build
 ```
 
 ## Notes
@@ -30,6 +30,8 @@ $ node generate.mjs
   - The the most recent month and year from the sidebar are prepended to the, eg: feb_2025_article_title.html
 - The script also copies everything from index.html _besides the article_ into every html file it finds in the articles/ directory
   - This ensures that all other changes are carried over into every article for consistency
+- The index.html file is also intended to be used as the entry point for the site
+    * Since the project structure puts outside of the root of the application, the _redirects file is there to make Netlify deployments work
 
 ## Limitations/Caveats
 

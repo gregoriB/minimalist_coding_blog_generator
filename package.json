@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "format": "npx prettier . -w"
+    "format": "npx prettier . -w",
+    "build": "node generate.mjs"
   },
   "author": "",
   "license": "ISC",
