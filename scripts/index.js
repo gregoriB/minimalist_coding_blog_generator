@@ -1,6 +1,6 @@
 function changeTheme(theme) {
   document.getElementById("hljs-theme").href =
-    `../libs/highlight/styles/${theme}.min.css`;
+    `../deps/highlight/styles/${theme}.min.css`;
 }
 
 hljs.debugMode();

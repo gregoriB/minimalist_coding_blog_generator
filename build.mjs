@@ -56,7 +56,7 @@ function makeBuildDirectory() {
   console.log(`${GRAY}Creating deployable build${CLEAR}`);
   copyDirectory("scripts", buildDirectory);
   copyDirectory("styles", buildDirectory);
-  copyDirectory("libs", buildDirectory);
+  copyDirectory("deps", buildDirectory);
   copyDirectory("assets", buildDirectory);
   copyDirectory("articles", buildDirectory, true);
   fs.copyFileSync(templateFile, buildDirectory + "index.html");
