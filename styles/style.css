@@ -25,9 +25,16 @@ body {
 }
 
 #site-banner #logo {
+  margin: 0 auto;
+  background-image: var(--logo-image);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position-x: center;
+  background-position-y: center;
   opacity: 0.2;
   filter: drop-shadow(1.5px 0px 0px var(--font-color));
   width: 15rem;
+  height: 100%;
 }
 
 .content-container {

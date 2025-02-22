@@ -50,6 +50,8 @@
   --font-color: #e1e1ff;
   --bg-color: #161625;
   --heading-color: #818cab;
+
+  --logo-image: url("../assets/images/logo_light.svg");
 }
 
 [data-theme="light"] {
@@ -58,4 +60,6 @@
   --font-color: #424242;
   --bg-color: #fff;
   --heading-color: #292922;
+
+  --logo-image: url("../assets/images/logo_dark.svg");
 }
