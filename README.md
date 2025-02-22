@@ -33,6 +33,10 @@ To do both stages at the same time, run:
 $npm run generate:build
 ```
 
+## Deployment
+
+Set `npm run generate:build` as your build command, and `/build` as your publish directory
+
 ## Notes
 
 - The template.html file is the blog page template with a sidebar for article links and a header
