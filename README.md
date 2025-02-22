@@ -19,27 +19,42 @@ The goal is to use at little JS as possible in the client to deliver a good read
 Update the article contents in the `index.html` file with new blog post, update the sidebar links,
 and run the node script:
 ```sh
+$ npm run generate
+```
+
+Then to create a build folder for easy deployment, run:
+and run the node script:
+```sh
 $ npm run build
+```
+
+To do both stages at the same time, run:
+```sh
+$npm run generate:build
 ```
 
 ## Notes
 
-- The index.html file is a blog template with a sidebar for article links and a header
+- The template.html file is the blog page template with a sidebar for article links and a header
 - The `generate.mjs` node script creates a new html file from index.html
-  - The new html file is name from the article title
-  - The the most recent month and year from the sidebar are prepended to the, eg: feb_2025_article_title.html
-- The script also copies everything from index.html _besides the article_ into every html file it finds in the articles/ directory
-  - This ensures that all other changes are carried over into every article for consistency
-- The index.html file is also intended to be used as the entry point for the site
-    * Since the project structure puts outside of the root of the application, the _redirects file is there to make Netlify deployments work
+  * The new html file is name from the article title
+  * The the most recent month and year from the sidebar are prepended to the, eg: feb_2025_article_title.html
+- The script also copies everything from template.html _besides the article_ into every html file it finds in the articles/ directory
+  * This ensures that all other changes are carried over into every article for consistency
+- The `build.mjs` script creates a build folder
+  * All of the required directories are copied into it
+  * All of the blog articles are copied into the root of the build folder, including index.html (to act as an website entry point)
+  * Non-minified CSS and JS files are somewhat minified
+
 
 ## Limitations/Caveats
 
 - As of right now, updating the side bar is a bit tedious, since it's easy to mess up dates
-  - In the future, I'd like to have the script automatically generate sidebar links using the existing html files and the current date, instead of having that hardcoded in
+  * In the future, I'd like to have the script automatically generate sidebar links using the existing html files and the current date, instead of having that hardcoded in
 - There isn't much freedom, which is by design. Anything can be posted in the article section, but that's it
-- Everything is hardcoded into the index.html file
+- Everything is hardcoded into the template.html file
 - There is not yet any kind of backup mechanism for articles, so use version control and check your diffs!
+- The current minification is not great and is used is a hold-over for now
 
 ## Planned Features
 
@@ -48,6 +63,7 @@ $ npm run build
     * This planned feature is up in the air, because I don't want to make it too easy to create AI slop blogs
 - Some way to handle scaling the sidebar with article links
     * It shouldn't grow longer and longer forever. It would need to partially collapse or link to a new page with more articles
+- Better minification
 
 ## Contributions
 

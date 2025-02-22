@@ -12,9 +12,9 @@ const CYAN = `\x1b[36m`;
 const GRAY = `\x1b[90m`;
 const ORANGE = `\x1b[38;5;214m`;
 
-const indexFile = `index.html`;
-const articlesFolder = `./articles/`;
-const indexDom = await JSDOM.fromFile(articlesFolder + indexFile);
+const templateFile = `template.html`;
+const articlesDirectory = "./articles/";
+const indexDom = await JSDOM.fromFile(templateFile);
 
 async function query(dom, selector) {
   return dom.window.document.querySelector(selector);
@@ -28,11 +28,11 @@ async function query(dom, selector) {
 async function updateFiles() {
   console.log(`${GRAY}Updating existing blog posts with current data${CLEAR}`);
 
-  const files = fs.readdirSync(articlesFolder);
+  const files = fs.readdirSync(articlesDirectory);
   for (const file of files) {
-    if (file == indexFile) continue;
+    if (file == templateFile) continue;
 
-    const filePath = path.join(articlesFolder, file);
+    const filePath = path.join(articlesDirectory, file);
     if (fs.statSync(filePath).isFile() && filePath.endsWith(`.html`)) {
       const dom = await JSDOM.fromFile(filePath);
       const indexHtml = await query(indexDom, `html`);
@@ -72,7 +72,7 @@ async function createNewFile() {
   let fileName = `${(date + titleText).toLowerCase().replace(/[^a-zA-Z0-9]/g, `_`)}.html`;
 
   console.log(`${GRAY}Building for blog post: ${BLUE}"${titleText}"${CLEAR}`);
-  fs.writeFileSync(articlesFolder + fileName, indexDom.serialize(), `utf8`);
+  fs.writeFileSync(articlesDirectory + fileName, indexDom.serialize(), `utf8`);
   console.log(`${RED}${fileName}${CLEAR} file created`, "\n");
 }
 
@@ -81,13 +81,13 @@ async function createNewFile() {
  */
 async function processFiles() {
   try {
-    console.log(`${CYAN}Building blog post${CLEAR}`, "\n");
+    console.log(`${CYAN}Generating blog post${CLEAR}`, "\n");
     await updateFiles();
     await createNewFile();
-    console.log(`${GREEN}Build complete!${CLEAR}`, "\n");
+    console.log(`${GREEN}Generation complete!${CLEAR}`, "\n");
   } catch (error) {
     console.error(`ERROR PROCESSING FILES:`, error);
-    console.log(`${ORANGE}!!! STOPPING BUILD !!!${CLEAR}`);
+    console.log(`${ORANGE}!!! STOPPING GENERATION !!!${CLEAR}`);
   }
 }
 
