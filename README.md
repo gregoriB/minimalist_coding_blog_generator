@@ -26,7 +26,7 @@ $ npm run generate help
 
 ## Deployment
 
-running `generate all` of `generate build` will generate a build directory with everything needed to deploy the website.
+running `generate all` or `generate build` will generate a build directory with everything needed to deploy the website.
 
 ## Notes
 
