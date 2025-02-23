@@ -1,0 +1,38 @@
+import build from "./src/build.mjs";
+import backup from "./src/backup.mjs";
+import update from "./src/update.mjs";
+import help from "./src/help.mjs";
+
+import { colors, commands, leftPadding } from "./src/variables.mjs";
+const { GRAY, RED, CYAN, GREEN, BLUE, ORANGE, MAGENTA, CLEAR } = colors;
+const { HELP, HELP_SHORT, BACKUP, UPDATE, BUILD, ALL } = commands;
+
+async function main() {
+  const args = process.argv.slice(2);
+  const command = args[0];
+
+  switch (command) {
+    case BACKUP:
+      backup();
+      break;
+    case UPDATE:
+      update();
+      break;
+    case BUILD:
+      build();
+      break;
+    case ALL:
+      console.log(`${leftPadding}${MAGENTA}   Generating Blog${CLEAR}`, "\n");
+      backup();
+      await update();
+      build();
+      break;
+    case HELP:
+    case HELP_SHORT:
+    default:
+      help();
+      break;
+  }
+}
+
+main();

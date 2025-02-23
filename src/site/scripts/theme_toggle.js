@@ -14,8 +14,6 @@ function setCurrentTheme() {
   const currentTheme = localStorage.getItem("theme") || defaultTheme;
   document.documentElement.setAttribute(themeSelector, currentTheme);
   toggle.checked = currentTheme != defaultTheme;
-console.log("setting theme: ", currentTheme);
-
   changeTheme(getThemeStyling(currentTheme));
 }
 

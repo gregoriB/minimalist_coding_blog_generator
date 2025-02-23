@@ -4,7 +4,7 @@
 
 # Minimalist Coding Blog Generator
 
-Minimalist developer blog site with syntax highlighting and a persistent light/dark theme toggle.  Utilizes a template and a basic script to auto-generate new HTML files for blog posts.
+Minimalist developer blog site with syntax highlighting and a persistent light/dark theme toggle.  Utilizes a template and a basic script to auto-generate new static HTML files for blog posts.
 
 The goal is to use at little JS as possible in the client to deliver a good reader experience.  JS is mainly used for theme toggling at this time because I consider that a necessary modern feature of a coding blog site.
 
@@ -16,40 +16,31 @@ The goal is to use at little JS as possible in the client to deliver a good read
 
 ## Use
 
-Update the article contents in the `index.html` file with new blog post, update the sidebar links,
-and run the node script:
+To generate the entire blog, update `src/template.html` with the article and updated sidebar links, and run this command:
 ```sh
-$ npm run generate
+$ npm run generate all
 ```
-
-Then to create a build folder for easy deployment, run:
-and run the node script:
+To display a full list of commands, run the help command:
 ```sh
-$ npm run build
-```
-
-To do both stages at the same time, run:
-```sh
-$npm run generate:build
+$ npm run generate help
 ```
 
 ## Deployment
 
-Set `npm run generate:build` as your build command, and `/build` as your publish directory
+running `generate all` of `generate build` will generate a build folder with everything needed to deploy the website.
 
 ## Notes
 
 - The template.html file is the blog page template with a sidebar for article links and a header
-- The `generate.mjs` node script creates a new html file from index.html
+- The `src/update.mjs` node script creates a new html file from template.html
   * The new html file is name from the article title
-  * The the most recent month and year from the sidebar are prepended to the, eg: feb_2025_article_title.html
+  * The the most recent month and year from the sidebar are prepended to the, eg: `feb_2025_article_title.html`
 - The script also copies everything from template.html _besides the article_ into every html file it finds in the articles/ directory
   * This ensures that all other changes are carried over into every article for consistency
 - The `build.mjs` script creates a build folder
   * All of the required directories are copied into it
-  * All of the blog articles are copied into the root of the build folder, including index.html (to act as an website entry point)
-  * Non-minified CSS and JS files are somewhat minified
-
+  * All of the blog articles are copied into the root of the build folder, including `template.html` as `index.html` (to act as an website entry point)
+  * Non-minified CSS and JS files are minified
 
 ## Limitations/Caveats
 
@@ -57,8 +48,8 @@ Set `npm run generate:build` as your build command, and `/build` as your publish
   * In the future, I'd like to have the script automatically generate sidebar links using the existing html files and the current date, instead of having that hardcoded in
 - There isn't much freedom, which is by design. Anything can be posted in the article section, but that's it
 - Everything is hardcoded into the template.html file
-- There is not yet any kind of backup mechanism for articles, so use version control and check your diffs!
-- The current minification is not great and is used is a hold-over for now
+- There is a backup mechanism for articles, but also use version control and check your diffs to be safe.
+- The current minification is not great and is used as a hold-over for now
 
 ## Planned Features
 

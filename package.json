@@ -4,9 +4,7 @@
   "main": "index.js",
   "scripts": {
     "format": "npx prettier . -w",
-    "build": "node build.mjs",
-    "generate": "node generate.mjs",
-    "generate:build": "node generate.mjs && node build.mjs"
+    "generate": "node run.mjs"
   },
   "author": "",
   "license": "ISC",

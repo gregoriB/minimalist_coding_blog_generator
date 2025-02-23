@@ -40,19 +40,19 @@
         <section class="articles-by-date" data-find="side-bar-section" data-date="feb-2025">
           <h3>February 2025</h3>
           <ul data-find="side-bar-list">
-            <li><a href="feb_2025_this_is_three.html">This is Three</a></li>
+            <li><a href="feb_2025_this_is_the_latest_article_for_a_new_month.html">This is the Latest Article for a New Month</a></li>
           </ul>
         </section>
         <section class="articles-by-date" data-find="side-bar-section" data-date="jan-2025">
           <h3>January 2025</h3>
           <ul data-find="side-bar-list">
-            <li><a href="jan_2025_this_is_two.html">This is Two</a></li>
-            <li><a href="jan_2025_this_is_one.html">This is One</a></li>
+            <li><a href="jan_2025_this_is_another_example_article_without_any_code.html">This is Another Example Article without any Code</a></li>
+            <li><a href="jan_2025_this_is_some_test_article_with_a_code_example.html">This is Some Test Article with a Code Example</a></li>
           </ul>
         </section>
       </section>
       <section id="main-content" data-find="main-content">
-        <h2 data-find="main-content-title">This is One</h2>
+        <h2 data-find="main-content-title">This is the Latest Article for a New Month</h2>
         <time datetime="2018-07-07">January 20th, 2025</time>
         <article>
           <p>
@@ -68,43 +68,6 @@
             Hendrerit fermentum curae; facilisi! Metus curabitur nostra
             consectetur.
           </p>
-
-          <pre><code>
-#pragma once
-
-#include "../components.hpp"
-#include "../core.hpp"
-
-namespace Systems::Score
-{
-inline void cleanup(ComponentManager &amp;cm)
-{
-}
-
-inline auto update(ComponentManager &amp;cm)
-{
-    auto [scoreEventSet] = cm.getAll<scoreevent>();
-    scoreEventSet.each([&amp;](EId eId, auto &amp;scoreEvents) {
-        scoreEvents.inspect([&amp;](const ScoreEvent &amp;scoreEvent) {
-            auto [pointsComps] = cm.get<pointscomponent>(scoreEvent.pointsId);
-            if (!pointsComps)
-                return;
-
-            auto [points, multiplier] =
-                pointsComps.peek(&amp;PointsComponent::points, &amp;PointsComponent::multiplier);
-            auto [scoreComps] = cm.get<scorecomponent>(eId);
-            scoreComps.mutate([&amp;](ScoreComponent &amp;scoreComp) { scoreComp.score += (points * multiplier); });
-
-            auto [playerId, _] = cm.getUnique<playercomponent>();
-            if (eId == playerId)
-                cm.add<uievent>(eId, UIEvents::UPDATE_SCORE);
-        });
-    });
-
-    return cleanup;
-}
-}; // namespace Systems::Score
-        </uievent></playercomponent></scorecomponent></pointscomponent></scoreevent></code></pre>
           <p>
             Lorem arcu class est phasellus ipsum mattis euismod. Facilisi nisl
             iaculis ad maecenas fames. Ante sed justo justo dolor fusce praesent

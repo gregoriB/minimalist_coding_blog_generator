@@ -1,20 +1,12 @@
 import fs from "fs";
 import path from "path";
 import { JSDOM } from "jsdom";
+import { colors, directories, templateFile } from "./variables.mjs";
 
-const CLEAR = `\x1b[0m`;
-const RED = `\x1b[31m`;
-const GREEN = `\x1b[32m`;
-const YELLOW = `\x1b[33m`;
-const BLUE = `\x1b[34m`;
-const MAGENTA = `\x1b[35m`;
-const CYAN = `\x1b[36m`;
-const GRAY = `\x1b[90m`;
-const ORANGE = `\x1b[38;5;214m`;
+const { GRAY, RED, CYAN, GREEN, BLUE, ORANGE, CLEAR } = colors;
+const { articlesDir, sourceDir, siteDir } = directories;
 
-const templateFile = `template.html`;
-const articlesDirectory = "./articles/";
-const indexDom = await JSDOM.fromFile(templateFile);
+const indexDom = await JSDOM.fromFile(sourceDir + templateFile);
 
 async function query(dom, selector) {
   return dom.window.document.querySelector(selector);
@@ -28,11 +20,11 @@ async function query(dom, selector) {
 async function updateFiles() {
   console.log(`${GRAY}Updating existing blog posts with current data${CLEAR}`);
 
-  const files = fs.readdirSync(articlesDirectory);
+  const files = fs.readdirSync(articlesDir);
   for (const file of files) {
     if (file == templateFile) continue;
 
-    const filePath = path.join(articlesDirectory, file);
+    const filePath = path.join(articlesDir, file);
     if (fs.statSync(filePath).isFile() && filePath.endsWith(`.html`)) {
       const dom = await JSDOM.fromFile(filePath);
       const indexHtml = await query(indexDom, `html`);
@@ -72,23 +64,24 @@ async function createNewFile() {
   let fileName = `${(date + titleText).toLowerCase().replace(/[^a-zA-Z0-9]/g, `_`)}.html`;
 
   console.log(`${GRAY}Building for blog post: ${BLUE}"${titleText}"${CLEAR}`);
-  fs.writeFileSync(articlesDirectory + fileName, indexDom.serialize(), `utf8`);
+  fs.writeFileSync(articlesDir + fileName, indexDom.serialize(), `utf8`);
   console.log(`${RED}${fileName}${CLEAR} file created`, "\n");
 }
 
 /**
  * Update existing HTML files with the data from index.html and create new blog html file
  */
-async function processFiles() {
+export default async function updateHTML() {
   try {
-    console.log(`${CYAN}Generating blog post${CLEAR}`, "\n");
+    console.log(`${CYAN}Creating blog post${CLEAR}`, "\n");
+    if (!fs.existsSync(articlesDir)) {
+      fs.mkdirSync(articlesDir);
+    }
     await updateFiles();
     await createNewFile();
-    console.log(`${GREEN}Generation complete!${CLEAR}`, "\n");
+    console.log(`${GREEN}HTML updates complete!${CLEAR}`, "\n");
   } catch (error) {
     console.error(`ERROR PROCESSING FILES:`, error);
-    console.log(`${ORANGE}!!! STOPPING GENERATION !!!${CLEAR}`);
+    console.log(`${ORANGE}!!! STOPPING UPDATES !!!${CLEAR}`);
   }
 }
-
-processFiles();
