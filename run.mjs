@@ -1,9 +1,9 @@
-import build from "./src/build.mjs";
-import backup from "./src/backup.mjs";
-import update from "./src/update.mjs";
-import help from "./src/help.mjs";
+import build from "./src/generator/build.mjs";
+import backup from "./src/generator/backup.mjs";
+import update from "./src/generator/update.mjs";
+import help from "./src/generator/help.mjs";
 
-import { colors, commands, leftPadding } from "./src/variables.mjs";
+import { colors, commands, leftPadding } from "./src/generator/variables.mjs";
 const { GRAY, RED, CYAN, GREEN, BLUE, ORANGE, MAGENTA, CLEAR } = colors;
 const { HELP, HELP_SHORT, BACKUP, UPDATE, BUILD, ALL } = commands;
 

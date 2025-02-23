@@ -8,11 +8,10 @@ Minimalist developer blog site with syntax highlighting and a persistent light/d
 
 The goal is to use at little JS as possible in the client to deliver a good reader experience.  JS is mainly used for theme toggling at this time because I consider that a necessary modern feature of a coding blog site.
 
-## Dependences
+## Site Dependencies
 
 - Highlightjs - Adds auto-detected syntax highlighting for code
 - Highlightjs-copy - Adds a copy button for code blocks
-- NodeJS or an equivelant JS runtime
 
 ## Use
 
