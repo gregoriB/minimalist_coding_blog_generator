@@ -26,7 +26,7 @@ $ npm run generate help
 
 ## Deployment
 
-running `generate all` of `generate build` will generate a build folder with everything needed to deploy the website.
+running `generate all` of `generate build` will generate a build directory with everything needed to deploy the website.
 
 ## Notes
 
@@ -36,9 +36,9 @@ running `generate all` of `generate build` will generate a build folder with eve
   * The the most recent month and year from the sidebar are prepended to the, eg: `feb_2025_article_title.html`
 - The script also copies everything from template.html _besides the article_ into every html file it finds in the articles/ directory
   * This ensures that all other changes are carried over into every article for consistency
-- The `build.mjs` script creates a build folder
+- The `build.mjs` script creates a build directory
   * All of the required directories are copied into it
-  * All of the blog articles are copied into the root of the build folder, including `template.html` as `index.html` (to act as an website entry point)
+  * All of the blog articles are copied into the root of the build directory, including `template.html` as `index.html` (to act as a website entry point)
   * Non-minified CSS and JS files are minified
 
 ## Limitations/Caveats
@@ -63,7 +63,7 @@ running `generate all` of `generate build` will generate a build folder with eve
 
 I'll accept contributions to fix bugs, but new unplanned features may be rejected on the grounds that the blog site is supposed to be very minimal.  Personally, if I ever need to scale this up to something that is not so minimal, I'll fork it and go from there.
 
-Please run the prettier script before submitting a pull request.
+Also please remember to run the prettier script before submitting a pull request.
 
 
 [//]: #

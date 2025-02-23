@@ -1,6 +1,5 @@
 import { colors, leftPadding } from "./variables.mjs";
 const { GRAY, RED, CYAN, GREEN, BLUE, ORANGE, MAGENTA, CLEAR } = colors;
-// const { HELP, HELP_SHORT, BACKUP, UPDATE, BUILD, ALL } = commands;
 
 const EXAMPLE = "npm run generate <command>";
 const flagMessages = {
@@ -26,6 +25,7 @@ function getHelpStr(flag, message) {
 export default function logHelp() {
   console.log(`${leftPadding}${CYAN}Generator Usage Information${CLEAR}`, "\n");
   console.log(leftPadding + EXAMPLE, "\n");
+  console.log(`${leftPadding}Commands:\n`);
   for (let m in flagMessages) {
     console.log(leftPadding + getHelpStr(m.toLowerCase(), flagMessages[m]));
   }
