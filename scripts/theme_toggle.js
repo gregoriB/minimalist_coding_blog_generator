@@ -1,37 +1,32 @@
-const lightCodetheme = "atom-one-light";
-const darkCodetheme = "atom-one-dark";
+const lightStyling = "atom-one-light";
+const darkStyling = "atom-one-dark";
+const defaultTheme = "dark";
+const otherTheme = "light";
+const themeSelector = "data-theme";
 
-const toggleSwitch = document.querySelector(
-  '.theme-switch input[type="checkbox"]',
-);
+function getThemeStyling(theme = defaultTheme) {
+  return theme === "dark" ? darkStyling : lightStyling;
+}
+
+const toggle = document.querySelector('.theme-switch input[type="checkbox"]');
 
 function setCurrentTheme() {
-  const currentTheme = localStorage.getItem("theme");
+  const currentTheme = localStorage.getItem("theme") || defaultTheme;
+  document.documentElement.setAttribute(themeSelector, currentTheme);
+  toggle.checked = currentTheme != defaultTheme;
+console.log("setting theme: ", currentTheme);
 
-  if (currentTheme) {
-    document.documentElement.setAttribute("data-theme", currentTheme);
-
-    if (currentTheme === "light") {
-      toggleSwitch.checked = true;
-      changeTheme(lightCodetheme);
-    } else {
-      changeTheme(darkCodetheme);
-    }
-  }
+  changeTheme(getThemeStyling(currentTheme));
 }
 
 function switchTheme(e) {
-  if (!e.target.checked) {
-    document.documentElement.setAttribute("data-theme", "dark");
-    localStorage.setItem("theme", "dark");
-    changeTheme(darkCodetheme);
-  } else {
-    document.documentElement.setAttribute("data-theme", "light");
-    localStorage.setItem("theme", "light");
-    changeTheme(lightCodetheme);
-  }
+  const theme = e.target.checked ? otherTheme : defaultTheme;
+  localStorage.setItem("theme", theme);
+  document.documentElement.setAttribute(themeSelector, theme);
+
+  changeTheme(getThemeStyling(theme));
 }
 
-toggleSwitch.addEventListener("change", switchTheme, false);
+toggle.addEventListener("change", switchTheme, false);
 
 setCurrentTheme();
