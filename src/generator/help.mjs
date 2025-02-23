@@ -1,7 +1,9 @@
 import { colors, leftPadding } from "./variables.mjs";
 const { GRAY, RED, CYAN, GREEN, BLUE, ORANGE, MAGENTA, CLEAR } = colors;
 
-const EXAMPLE = "npm run generate <command>";
+const ITALICS = "\x1b[3m";
+const BOLD = "\u001b[1m";
+const EXAMPLE = `${ITALICS}$ npm run generate <command>${CLEAR}`;
 const flagMessages = {
   BUILD: "Build the site contents in src/site/ to deployable build/ directory",
   BACKUP:

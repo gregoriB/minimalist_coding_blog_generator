@@ -20,4 +20,5 @@ export default function createBackups() {
 
   console.log(`${CYAN}Creating Backups${CLEAR}`, "\n");
   copyDir(articlesDir, backupsDir + newDir);
+  console.log();
 }

@@ -9,7 +9,7 @@ const { HELP, HELP_SHORT, BACKUP, UPDATE, BUILD, ALL } = commands;
 
 async function main() {
   const args = process.argv.slice(2);
-  const command = args[0];
+  const command = args[0] || HELP;
 
   switch (command) {
     case BACKUP:
@@ -29,7 +29,13 @@ async function main() {
       break;
     case HELP:
     case HELP_SHORT:
+      help();
+      break;
     default:
+      console.log(
+        `${leftPadding}${RED}Command: '${command}' not recognized${CLEAR}`,
+        "\n",
+      );
       help();
       break;
   }
