@@ -52,6 +52,15 @@
   --heading-color: #818cab;
 
   --logo-image: url("../assets/images/logo_light.svg");
+
+  --logo-social-github: url("../assets/images/social/github_logo_light.svg");
+  --logo-social-gitlab: url("../assets/images/social/gitlab_logo.svg");
+  --logo-social-x: url("../assets/images/social/x_logo_light.svg");
+  --logo-social-patreon: url("../assets/images/social/patreon_logo_light.svg");
+  --logo-social-bmc: url("../assets/images/social/buy_me_a_coffee_logo_light.svg");
+  --logo-social-email: url("../assets/images/social/email_logo_light.svg");
+
+  --logo-social-bmc-text: url("../assets/images/social/buy_me_a_coffee_logo_text_light.svg");
 }
 
 [data-theme="light"] {
@@ -59,7 +68,16 @@
   --secondary-color: #536390;
   --font-color: #424242;
   --bg-color: #fff;
-  --heading-color: #292922;
+  --heading-color: #3e3e38;
 
   --logo-image: url("../assets/images/logo_dark.svg");
+
+  --logo-social-github: url("../assets/images/social/github_logo_dark.svg");
+  --logo-social-gitlab: url("../assets/images/social/gitlab_logo.svg");
+  --logo-social-x: url("../assets/images/social/x_logo_dark.svg");
+  --logo-social-patreon: url("../assets/images/social/patreon_logo_dark.svg");
+  --logo-social-bmc: url("../assets/images/social/buy_me_a_coffee_logo_dark.svg");
+  --logo-social-email: url("../assets/images/social/email_logo_dark.svg");
+
+  --logo-social-bmc-text: url("../assets/images/social/buy_me_a_coffee_logo_text_dark.svg");
 }

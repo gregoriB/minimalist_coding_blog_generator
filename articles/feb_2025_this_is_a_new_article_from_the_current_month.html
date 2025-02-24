@@ -23,38 +23,57 @@
   </head>
   <body>
 
-    <header id="site-banner">
-        <h1 id="logo" alt="svg site logo"></h1>
-      <div class="theme-switch-wrapper">
+    <header data-find="header" id="site-banner">
+      <h1 data-find="header-logo" id="banner-logo" alt="svg site logo"></h1>
+      <div data-find="header-theme-switcher" class="theme-switch-wrapper">
         <label class="theme-switch" for="checkbox">
           <input type="checkbox" id="checkbox">
           <div class="slider round"></div>
         </label>
-        <em>toggle theme</em>
+        <em id="theme-switch-text">toggle theme</em>
       </div>
     </header>
 
-    <section class="content-container">
-      <section id="side-bar" data-find="side-bar">
+    <main class="content-container" id="site-main-content">
+      <nav id="side-bar" data-find="side-bar">
         <h2>More Articles</h2>
         <section class="articles-by-date" data-find="side-bar-section" data-date="feb-2025">
-          <h3>February 2025</h3>
+          <h3>
+              February 2025
+          </h3>
           <ul data-find="side-bar-list">
-            <li><a href="feb_2025_this_is_the_latest_article_for_a_new_month.html">This is the Latest Article for a New Month</a></li>
+            <li><a href="feb_2025_this_is_a_new_article_from_the_current_month.html">
+                This is a New Article from the Current Month
+            </a></li>
           </ul>
         </section>
         <section class="articles-by-date" data-find="side-bar-section" data-date="jan-2025">
-          <h3>January 2025</h3>
+          <h3>
+              January 2025
+          </h3>
           <ul data-find="side-bar-list">
-            <li><a href="jan_2025_this_is_another_example_article_without_any_code.html">This is Another Example Article without any Code</a></li>
-            <li><a href="jan_2025_this_is_some_test_article_with_a_code_example.html">This is Some Test Article with a Code Example</a></li>
+            <li><a href="jan_2025_this_is_an_article_from_the_previous_month.html">
+                This is an Article from the Previous Month
+            </a></li>
           </ul>
         </section>
-      </section>
-      <section id="main-content" data-find="main-content">
-        <h2 data-find="main-content-title">This is Some Test Article with a Code Example</h2>
-        <time datetime="2018-07-07">January 1st, 2025</time>
-        <article>
+      </nav>
+
+      <article data-find="main-content" id="article-content">
+
+        <section data-find="main-content-heading" id="article-heading">
+            <h2 data-find="main-content-title" id="article-heading-title">
+                This is a New Article from the Current Month
+            </h2>
+            <h3 data-find="main-content-sub-heading" id="article-heading-sub-heading">
+                This the more descriptive subheading.  Here you can see a more detailed explaination of the article's main point.
+                </h3>
+            <time data-find="article-date" datetime="2018-07-07" id="article-heading-date">
+                January 24th, 2025
+            </time>
+        </section>
+
+        <section data-find="main-content-body" id="article-body">
           <p>
             Lectus senectus faucibus pulvinar mattis imperdiet quisque lacus?
             Velit ut sagittis torquent pellentesque netus quam consequat
@@ -68,43 +87,39 @@
             Hendrerit fermentum curae; facilisi! Metus curabitur nostra
             consectetur.
           </p>
-
         <pre><code>
-#pragma once
+// Example copied from a generator script
 
-#include "../components.hpp"
-#include "../core.hpp"
+import path from "path";
+import fs from "fs";
 
-namespace Systems::Score
-{
-inline void cleanup(ComponentManager &amp;cm)
-{
+
+export function copyDir(src, dest, config = {}) {
+  let destPath = config.copySrc ? path.join(dest, path.basename(src)) : dest;
+
+  fs.mkdirSync(destPath, { recursive: true });
+  fs.readdirSync(src).forEach((file) =&gt; {
+    const srcPath = path.join(src, file);
+    const finalDestPath = path.join(destPath, file);
+
+    if (fs.lstatSync(srcPath).isDirectory()) {
+      config.copySrc = true;
+      copyDir(srcPath, destPath, config);
+    } else {
+      if (canMinify(file) &amp;&amp; config.minify) {
+        let content = fs.readFileSync(srcPath, "utf8");
+        content = content
+          .replace(/\s*([{}()\[\]=+&lt;&gt;!&amp;|,;:*\/?-])\s*/g, "$1")
+          .replace(/\n\s*/g, "\n")
+          .trim();
+        fs.writeFileSync(finalDestPath, content);
+      } else {
+        fs.copyFileSync(srcPath, finalDestPath);
+      }
+    }
+  });
 }
-
-inline auto update(ComponentManager &amp;cm)
-{
-    auto [scoreEventSet] = cm.getAll<scoreevent>();
-    scoreEventSet.each([&amp;](EId eId, auto &amp;scoreEvents) {
-        scoreEvents.inspect([&amp;](const ScoreEvent &amp;scoreEvent) {
-            auto [pointsComps] = cm.get<pointscomponent>(scoreEvent.pointsId);
-            if (!pointsComps)
-                return;
-
-            auto [points, multiplier] =
-                pointsComps.peek(&amp;PointsComponent::points, &amp;PointsComponent::multiplier);
-            auto [scoreComps] = cm.get<scorecomponent>(eId);
-            scoreComps.mutate([&amp;](ScoreComponent &amp;scoreComp) { scoreComp.score += (points * multiplier); });
-
-            auto [playerId, _] = cm.getUnique<playercomponent>();
-            if (eId == playerId)
-                cm.add<uievent>(eId, UIEvents::UPDATE_SCORE);
-        });
-    });
-
-    return cleanup;
-}
-}; // namespace Systems::Score
-        </uievent></playercomponent></scorecomponent></pointscomponent></scoreevent></code></pre>
+    </code></pre>
           <p>
             Lorem arcu class est phasellus ipsum mattis euismod. Facilisi nisl
             iaculis ad maecenas fames. Ante sed justo justo dolor fusce praesent
@@ -149,10 +164,28 @@ inline auto update(ComponentManager &amp;cm)
             sit. Fringilla odio gravida tortor mauris venenatis id et sodales
             cubilia pharetra maecenas egestas! Justo vulputate per.
           </p>
-        </article>
+        </section>
+      </article>
+    </main>
+  <footer data-find="footer" id="site-footer">
+      <section id="footer-social-links">
+      <a href="https://github.com/gregoriB/minimalist_coding_blog_site_generator">
+          <div title="Github" id="social-github-logo"></div>
+      </a>
+      <a href="#">
+          <div title="Gitlab" id="social-gitlab-logo"></div>
+      </a>
+      <a href="#">
+          <div title="X" id="social-x-logo"></div>
+      </a>
+      <a href="#">
+          <div title="Buy Me a Coffee" id="social-bmc-logo"></div>
+      </a>
+      <a href="#">
+          <div title="Patreon" id="social-patreon-logo"></div>
+      </a>
       </section>
-    </section>
-
+  </footer>
   
 
 </body></html>

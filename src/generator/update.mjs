@@ -61,7 +61,7 @@ async function createNewFile() {
   const titleText = title.textContent;
 
   // replace all special characters with `_` and set everything to lowercase
-  let fileName = `${(date + titleText).toLowerCase().replace(/[^a-zA-Z0-9]/g, `_`)}.html`;
+  let fileName = `${(date + titleText.trim()).toLowerCase().replace(/[^a-zA-Z0-9]/g, `_`)}.html`;
 
   console.log(`${GRAY}Building for blog post: ${BLUE}"${titleText}"${CLEAR}`);
   fs.writeFileSync(articlesDir + fileName, indexDom.serialize(), `utf8`);
