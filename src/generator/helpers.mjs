@@ -1,13 +1,26 @@
+import UglifyJS from "uglify-js";
+import UglifyCSS from "uglifycss";
 import path from "path";
 import fs from "fs";
-import { colors, directories } from "./variables.mjs";
 
+import { colors, directories } from "./variables.mjs";
 const { GRAY, RED, CYAN, GREEN, BLUE, ORANGE, MAGENTA, CLEAR } = colors;
 const { articlesDir, sourceDir, siteDir, buildDir } = directories;
 
-function canMinify(file) {
-  if (file.endsWith(".css") && !file.endsWith(".min.css")) return true;
+function canMinifyJS(file) {
   if (file.endsWith(".js") && !file.endsWith(".min.js")) return true;
+
+  return false;
+}
+
+function canMinifyCSS(file) {
+  if (file.endsWith(".css") && !file.endsWith(".min.css")) return true;
+
+  return false;
+}
+
+function canMinify(file) {
+  if (canMinifyJS(file) || canMinifyCSS(file)) return true;
 
   return false;
 }
@@ -35,10 +48,9 @@ export function copyDir(src, dest, config = {}) {
     } else {
       if (canMinify(file) && config.minify) {
         let content = fs.readFileSync(srcPath, "utf8");
-        content = content
-          .replace(/\s*([{}()\[\]=+<>!&|,;:*\/?-])\s*/g, "$1")
-          .replace(/\n\s*/g, "\n")
-          .trim();
+        content = canMinifyJS(file)
+          ? UglifyJS.minify(content).code
+          : UglifyCSS.processString(content);
         fs.writeFileSync(finalDestPath, content);
       } else {
         fs.copyFileSync(srcPath, finalDestPath);

@@ -9,7 +9,9 @@
   "author": "",
   "license": "ISC",
   "description": "",
-  "dependencies": {
-    "jsdom": "^26.0.0"
+  "devDependencies": {
+    "jsdom": "^26.0.0",
+    "uglify-js": "^3.19.3",
+    "uglifycss": "^0.0.29"
   }
 }

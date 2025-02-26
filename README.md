@@ -6,12 +6,12 @@
 
 Minimalist developer blog site with syntax highlighting and a persistent light/dark theme toggle.  Utilizes a template and a basic script to auto-generate new static HTML files for blog posts.
 
-The goal is to use at little JS as possible in the client to deliver a good reader experience.
+The goal is to keep the site minimal and focused on delivering a good reader experience.  JavaScript is also used minimally only when a comparable HTML or CSS solution doesn't exist.
 
 ## Site Dependencies
 
-- Highlightjs - Adds auto-detected syntax highlighting for code
-- Highlightjs-copy - Adds a copy button for code blocks
+- Highlightjs - Adds auto-detected syntax highlighting to code
+- Highlightjs-copy - Adds a copy button to the code blocks
 
 ## Use
 
@@ -26,17 +26,18 @@ $ npm run generate help
 
 ## Deployment
 
-running `generate all` or `generate build` will generate a build directory with everything needed to deploy the website.
+Running `generate all` or `generate build` will generate a build directory with everything needed to deploy the website.
 
 ## Notes
 
 - The template.html file is the blog page template with a sidebar for article links and a header
-- The `src/update.mjs` node script creates a new html file from template.html
+- All of the content of `src/site/` will be included in the site build
+- The `src/generator/update.mjs` node script creates a new html file from template.html
   * The new html file is name from the article title
   * The the most recent month and year from the sidebar are prepended to the, eg: `feb_2025_article_title.html`
 - The script also copies everything from template.html _besides the article_ into every html file it finds in the articles/ directory
   * This ensures that all other changes are carried over into every article for consistency
-- The `build.mjs` script creates a build directory
+- The `src/generator/build.mjs` script creates a build directory
   * All of the required directories are copied into it
   * All of the blog articles are copied into the root of the build directory, including `template.html` as `index.html` (to act as a website entry point)
   * Non-minified CSS and JS files are minified
@@ -48,16 +49,16 @@ running `generate all` or `generate build` will generate a build directory with 
 - There isn't much freedom, which is by design. Anything can be posted in the article section, but that's it
 - Everything is hardcoded into the template.html file
 - There is a backup mechanism for articles, but also use version control and check your diffs to be safe.
-- The current minification is not great and is used as a hold-over for now
 
 ## Planned Features
 
-- Social media links, possibly in the footer or sidebar
+- ~~Social media links, possibly in the footer or sidebar~~
 - A way to use JSON or some other format to store blog articles and auto-generate new posts and links from that
     * This planned feature is up in the air, because I don't want to make it too easy to create AI slop blogs
 - Some way to handle scaling the sidebar with article links
     * It shouldn't grow longer and longer forever. It would need to partially collapse or link to a new page with more articles
-- Better minification
+- ~~Better minification~~
+- ~~About Page~~
 
 ## Contributions
 

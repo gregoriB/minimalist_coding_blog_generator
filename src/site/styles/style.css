@@ -34,7 +34,9 @@ body {
   background-position-x: center;
   background-position-y: center;
   opacity: 0.2;
-  filter: drop-shadow(1.5px 0px 0px rgb(var(--font-color))); /* just making the logo a little fatter */
+  filter: drop-shadow(
+    1.5px 0px 0px rgb(var(--font-color))
+  ); /* just making the logo a little fatter */
   width: 15rem;
   height: 100%;
 }
