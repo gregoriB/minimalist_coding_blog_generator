@@ -6,7 +6,7 @@
 
 Minimalist developer blog site with syntax highlighting and a persistent light/dark theme toggle.  Utilizes a template and a basic script to auto-generate new static HTML files for blog posts.
 
-The goal is to use at little JS as possible in the client to deliver a good reader experience.  JS is mainly used for theme toggling at this time because I consider that a necessary modern feature of a coding blog site.
+The goal is to use at little JS as possible in the client to deliver a good reader experience.
 
 ## Site Dependencies
 

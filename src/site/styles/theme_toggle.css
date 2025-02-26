@@ -46,8 +46,7 @@
 }
 
 input:checked + .slider {
-  background-color: var(--primary-color);
-  /* background-color: #66bb6a; */
+  background-color: rgb(var(--primary-color));
 }
 
 input:checked + .slider:before {

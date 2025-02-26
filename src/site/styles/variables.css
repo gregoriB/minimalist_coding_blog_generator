@@ -41,15 +41,11 @@
 }
 
 :root {
-  --main-bg-color: gray;
-  --main-font-color: white;
-  --default-gap: 2rem;
-
-  --primary-color: #9a97f3;
-  --secondary-color: #818cab;
-  --font-color: #e1e1ff;
-  --bg-color: #161625;
-  --heading-color: #818cab;
+  --primary-color: 154, 151, 243;
+  --secondary-color: 129, 140, 171;
+  --font-color: 225, 225, 255;
+  --bg-color: 22, 22, 37;
+  --heading-color: 129, 140, 171;
 
   --logo-image: url("../assets/images/logo_light.svg");
 
@@ -64,11 +60,11 @@
 }
 
 [data-theme="light"] {
-  --primary-color: #302ae6;
-  --secondary-color: #536390;
-  --font-color: #424242;
-  --bg-color: #fff;
-  --heading-color: #3e3e38;
+  --primary-color: 48, 42, 230;
+  --secondary-color: 83, 99, 144;
+  --font-color: 66, 66, 66;
+  --bg-color: 255, 255, 255;
+  --heading-color: 62, 62, 56;
 
   --logo-image: url("../assets/images/logo_dark.svg");
 

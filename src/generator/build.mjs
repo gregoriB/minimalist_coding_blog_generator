@@ -25,8 +25,8 @@ function makeBuildDir() {
   fs.rmSync(buildDir, { force: true, recursive: true });
   fs.mkdirSync(buildDir, { recursive: true });
   console.log(`${GRAY}Creating deployable build${CLEAR}`);
-  copyDir(sourceDir + siteDir, buildDir, { minify: true });
-  copyDir(articlesDir, buildDir, { minify: true });
+  copyDir(sourceDir + siteDir, buildDir, { minify: false });
+  copyDir(articlesDir, buildDir, { minify: false });
   fs.copyFileSync(sourceDir + templateFile, buildDir + "index.html");
 }
 

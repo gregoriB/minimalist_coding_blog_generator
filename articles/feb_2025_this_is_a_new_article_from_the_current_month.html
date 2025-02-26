@@ -23,8 +23,10 @@
   </head>
   <body>
 
-    <header data-find="header" id="site-banner">
-      <h1 data-find="header-logo" id="banner-logo" alt="svg site logo"></h1>
+    <header data-find="header" id="site-banner" class="hide-in-iframe">
+      <a href="about.html">      
+        <h1 data-find="header-logo" id="banner-logo" alt="svg site logo"></h1>
+      </a>
       <div data-find="header-theme-switcher" class="theme-switch-wrapper">
         <label class="theme-switch" for="checkbox">
           <input type="checkbox" id="checkbox">
@@ -35,7 +37,7 @@
     </header>
 
     <main class="content-container" id="site-main-content">
-      <nav id="side-bar" data-find="side-bar">
+      <nav class="side-bar hide-in-iframe" id="article-side-bar" data-find="side-bar">
         <h2>More Articles</h2>
         <section class="articles-by-date" data-find="side-bar-section" data-date="feb-2025">
           <h3>
@@ -59,7 +61,7 @@
         </section>
       </nav>
 
-      <article data-find="main-content" id="article-content">
+      <article data-find="main-content" class="content" id="article-content">
 
         <section data-find="main-content-heading" id="article-heading">
             <h2 data-find="main-content-title" id="article-heading-title">
@@ -71,7 +73,12 @@
             <time data-find="article-date" datetime="2018-07-07" id="article-heading-date">
                 January 24th, 2025
             </time>
+
+            <span id="article-heading-author" data-find="article-author">
+                By <a rel="author" href="about.html">Some Blogger</a>
+            </span>
         </section>
+
 
         <section data-find="main-content-body" id="article-body">
           <p>
