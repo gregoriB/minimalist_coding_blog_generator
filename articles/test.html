@@ -1,0 +1,28 @@
+<article data-find="main-content" class="content" id="article-content">
+    <section data-find="main-content-heading" id="article-heading">
+
+        <h2 data-find="main-content-title" id="article-heading-title">
+            This is a Test Title
+
+        </h2>
+
+        <h3 data-find="main-content-sub-heading" id="article-heading-sub-heading">
+            {{ARTICLE_SUBHEADER}}
+        </h3>
+
+        <time data-find="article-date" datetime="" id="article-heading-date">
+            {{ARTICLE_DATE}}
+        </time>
+
+        <span id="article-heading-author" data-find="article-author">
+            By <a rel="author" href="about.html">
+                {{ARTICLE_AUTHOR}}
+            </a>
+        </span>
+
+    </section>
+
+    <section data-find="main-content-body" id="article-body">
+        {{ARTICLE_CONTENT}}
+    </section>
+</article>

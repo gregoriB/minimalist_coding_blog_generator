@@ -1,16 +1,15 @@
 import fs from "fs";
 import path from "path";
 import { JSDOM } from "jsdom";
-import { colors, directories, templateFile } from "./variables.mjs";
+import { colors, directories } from "./variables.mjs";
+import { query, generateBlogPosts } from "./helpers.mjs";
 
 const { GRAY, RED, CYAN, GREEN, BLUE, ORANGE, CLEAR } = colors;
-const { articlesDir, sourceDir, siteDir } = directories;
+const { articlesDir, sourceDir, siteDir, buildDir } = directories;
+
+const templateFile = "template_old.html"
 
 const indexDom = await JSDOM.fromFile(sourceDir + templateFile);
-
-async function query(dom, selector) {
-  return dom.window.document.querySelector(selector);
-}
 
 /**
  * Copies the blog article in each file, updates all of the HTML in that file
@@ -77,6 +76,8 @@ export default async function updateHTML() {
     if (!fs.existsSync(articlesDir)) {
       fs.mkdirSync(articlesDir);
     }
+
+    return generateBlogPosts(buildDir);
     await updateFiles();
     await createNewFile();
     console.log(`${GREEN}HTML updates complete!${CLEAR}`, "\n");

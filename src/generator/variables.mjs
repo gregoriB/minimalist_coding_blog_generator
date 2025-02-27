@@ -16,6 +16,15 @@ export const directories = {
   siteDir: "site/",
   buildDir: "build/",
   articlesDir: "articles/",
+  templatesDir: "templates/",
+};
+
+export const templates = {
+    main: { name: "head", selector: "html" }, 
+    banner: { name: "banner", selector: "[data-find='banner']" }, 
+    sidebar: { name: "sidebar", selector: "[data-find='side-bar']" }, 
+    article: { name: "article", selector: "[data-find='main-content']" }, 
+    footer: { name: "footer", selector: "[data-find='footer']" },
 };
 
 export const templateFile = "template.html";
@@ -26,7 +35,14 @@ export const commands = {
   BACKUP: "backup",
   UPDATE: "update",
   BUILD: "build",
+  NEW: "new",
   ALL: "all",
 };
+
+export const months = [
+"January", "February", "March", "April", "May", "June",
+"July", "August", "September", "October", "November", "December"
+];
+
 
 export const leftPadding = "     ";
