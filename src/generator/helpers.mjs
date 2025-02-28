@@ -93,7 +93,7 @@ export async function addElement(dom, data) {
   const tmplDom = await JSDOM.fromFile(filePath);
   const innerHTML = tmplDom.window.document.body.innerHTML.trim();
   let pageHTML = page.innerHTML;
-  pageHTML = pageHTML.replace(data.marker, innerHTML);
+  pageHTML = pageHTML.replaceAll(data.marker, innerHTML);
   page.innerHTML = pageHTML;
 }
 
@@ -150,7 +150,7 @@ function replaceSpecialChars(str, char = "") {
   return str.replace(/[^a-zA-Z0-9]/g, char);
 }
 
-async function createNewSidebarSectionHTML(title, url, month, year) {
+async function createNewSidebarSection(title, url, month, year) {
   const sidebarPath = path.join(
     sourceDir,
     templatesDir,
@@ -160,51 +160,59 @@ async function createNewSidebarSectionHTML(title, url, month, year) {
   const sideBarHTML = await query(sideBarDom, "html");
   const sideBar = await query(sideBarDom, "[data-find='side-bar-section']");
 
-  let newHTML = sideBar.innerHTML;
-  newHTML = newHTML.replace("{{ARTICLE_LINK}}", `${url}`);
-  newHTML = newHTML.replace("{{ARTICLE_TITLE}}", `${title}`);
-  newHTML = newHTML.replace("{{ARTICLE_DATE}}", `${month} ${year}`);
+  let newHTML = sideBar.outerHTML;
+  newHTML = newHTML.replaceAll("{{ARTICLE_LINK}}", `${url}`);
+  newHTML = newHTML.replaceAll("{{ARTICLE_TITLE}}", `${title}`);
+  newHTML = newHTML.replaceAll("{{ARTICLE_DATE}}", `${month} ${year}`);
   sideBarHTML.innerHTML = newHTML;
 
   return sideBarDom;
 }
 
-async function updateSidebarLinks(sidebarDom, pageDom, fileData, url) {
+async function updateSidebarLinks(
+  sidebarDom,
+  pageDom,
+  fileData,
+  url,
+  isNewMonth,
+) {
   const { month, year } = fileData;
   const articleTitle = await query(pageDom, "[data-find='main-content-title']");
   const titleText = articleTitle.textContent.trim();
-  const firstSideBarSection = await query(
-    sidebarDom,
-    "[data-find='side-bar-section']",
-  );
-  const date = firstSideBarSection.querySelector(
-    "[data-find='side-bar-section-date']",
-  );
-  const dateText = replaceSpecialChars(date.textContent, " ").trim();
-  const [dateMonth, dateYear] = dateText.split(" ");
-  const newEntryDom = await createNewSidebarSectionHTML(
+  const newEntryDom = await createNewSidebarSection(
     titleText,
     url,
     month.name,
     year,
   );
 
-  if (dateMonth != month.name || dateYear != year) {
-    const newHTML = newEntryDom.window.document.body.innerHTML.trim();
-    if (!months.includes(dateMonth)) {
-      firstSideBarSection.innerHTML = newHTML;
-    } else {
-      firstSideBarSection.outerHTML = newHTML + firstSideBarSection.outerHTML;
-    }
-  } else {
+  if (!isNewMonth) {
     const newItem = await query(
       newEntryDom,
       "[data-find='side-bar-section-item']",
     );
-    const existingList = firstSideBarSection.querySelector(
+
+    const sideBarSection = await query(
+      sidebarDom,
+      `[data-date='${fileData.month.name} ${fileData.year}']`,
+    );
+    const existingList = sideBarSection.querySelector(
       "[data-find='side-bar-section-list']",
     );
-    existingList.innerHTML = newItem.outerHTML + existingList.innerHTML;
+    existingList.innerHTML = existingList.innerHTML + newItem.outerHTML;
+
+    return;
+  }
+
+  const sideBarSection = await query(
+    sidebarDom,
+    "[data-find='side-bar-section']",
+  );
+  const newSectionHTML = newEntryDom.window.document.body.innerHTML.trim();
+  if (sideBarSection.outerHTML.includes("{{ARTICLE_DATE}}")) {
+    sideBarSection.outerHTML = newSectionHTML;
+  } else {
+    sideBarSection.outerHTML = sideBarSection.outerHTML + newSectionHTML;
   }
 }
 
@@ -223,15 +231,31 @@ async function populatePageFromYAML(pageDom, file) {
   let pageHTML = page.innerHTML;
 
   for (let [key, value] of Object.entries(mainParsed)) {
-    pageHTML = pageHTML.replace(`{{${key}}}`, value);
+    pageHTML = pageHTML.replaceAll(`{{${key}}}`, value);
   }
 
   for (let [key, value] of Object.entries(articleParsed)) {
     value = value instanceof Date ? value.toISOString() : value;
-    pageHTML = pageHTML.replace(`{{${key}}}`, value);
+    pageHTML = pageHTML.replaceAll(`{{${key}}}`, value);
   }
 
   page.innerHTML = pageHTML;
+}
+
+async function addUpdatedSidebarToFiles(sidebarDom) {
+  const builtBlogFiles = fs.readdirSync(buildDir);
+  for (const file of builtBlogFiles) {
+    const filePath = path.join(buildDir, file);
+    if (fs.statSync(filePath).isFile() && filePath.endsWith(`.html`)) {
+      const fileDom = await JSDOM.fromFile(filePath);
+      const fileSidebar = await query(fileDom, templates.sidebar.selector);
+      if (!fileSidebar) continue;
+
+      const newSidebar = await query(sidebarDom, templates.sidebar.selector);
+      fileSidebar.outerHTML = newSidebar.outerHTML;
+      fs.writeFileSync(filePath, fileDom.serialize(), `utf8`);
+    }
+  }
 }
 
 async function createPostsFromYAML(destDir, preferredPost) {
@@ -240,7 +264,9 @@ async function createPostsFromYAML(destDir, preferredPost) {
     ? `${preferredPost}.yaml`
     : articleFiles[0].file;
 
-  console.log(preferred);
+  let currentMonth = Number.MAX_VALUE;
+  let currentYear = Number.MAX_VALUE;
+
   const sidebarPath = path.join(
     sourceDir,
     templatesDir,
@@ -249,7 +275,14 @@ async function createPostsFromYAML(destDir, preferredPost) {
   const sidebarDom = await JSDOM.fromFile(sidebarPath);
 
   for (const fileData of articleFiles) {
-    const { file, uuid } = fileData;
+    const { file, uuid, month, year } = fileData;
+    let isNewMonth = false;
+    if (currentMonth != month.index || year != currentYear) {
+      currentMonth = month.index;
+      currentYear = year;
+      isNewMonth = true;
+    }
+
     const articlePath = path.join(articlesDir, file);
 
     if (fs.statSync(articlePath).isFile() && articlePath.endsWith(`.yaml`)) {
@@ -267,24 +300,18 @@ async function createPostsFromYAML(destDir, preferredPost) {
         console.log(`${RED}${indexPath}${CLEAR} file created`);
       }
 
-      await updateSidebarLinks(sidebarDom, pageDom, fileData, newName);
+      await updateSidebarLinks(
+        sidebarDom,
+        pageDom,
+        fileData,
+        newName,
+        isNewMonth,
+      );
       console.log(`${RED}${destPath}${CLEAR} file created`);
     }
   }
 
-  const builtBlogFiles = fs.readdirSync(buildDir);
-  for (const file of builtBlogFiles) {
-    const filePath = path.join(buildDir, file);
-    if (fs.statSync(filePath).isFile() && filePath.endsWith(`.html`)) {
-      const fileDom = await JSDOM.fromFile(filePath);
-      const fileSidebar = await query(fileDom, templates.sidebar.selector);
-      if (!fileSidebar) continue;
-
-      const newSidebar = await query(sidebarDom, templates.sidebar.selector);
-      fileSidebar.outerHTML = newSidebar.outerHTML;
-      fs.writeFileSync(filePath, fileDom.serialize(), `utf8`);
-    }
-  }
+  await addUpdatedSidebarToFiles(sidebarDom);
 
   console.log("\n");
 }
