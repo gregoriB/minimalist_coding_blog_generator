@@ -15,54 +15,50 @@ The goal is to keep the site minimal and focused on delivering a good reader exp
 
 ## Use
 
-To generate the entire blog, update `src/template.html` with the article and updated sidebar links, and run this command:
+Generate a new blog configuration file to articles/ directory:
 ```sh
-$ npm run generate all
+$ npm run generate new
 ```
-To display a full list of commands, run the help command:
+or alternatively to generate the file with a specific name:
 ```sh
-$ npm run generate help
+$ npm run generate new "My First Blog Post"
+```
+
+Build site and articles:
+```sh
+$ npm run generate build
+```
+
+Building can also include a the name of a file to be the featured article:
+```sh
+$ npm run generate build "My First Blog Post"
 ```
 
 ## Deployment
 
-Running `generate all` or `generate build` will generate a build directory with everything needed to deploy the website.
+Running `$ npm run generate build` generates a build directory with everything needed to deploy the website.
 
 ## Notes
 
-- The template.html file is the blog page template with a sidebar for article links and a header
+- Articles are in `.yaml` format.  Be sure to use yaml syntax verification!  Running `npm run format` should catch yaml errors, but it will not correct them.
 - All of the content of `src/site/` will be included in the site build
-- The `src/generator/update.mjs` node script creates a new html file from template.html
-  * The new html file is name from the article title
-  * The the most recent month and year from the sidebar are prepended to the, eg: `feb_2025_article_title.html`
-- The script also copies everything from template.html _besides the article_ into every html file it finds in the articles/ directory
-  * This ensures that all other changes are carried over into every article for consistency
-- The `src/generator/build.mjs` script creates a build directory
-  * All of the required directories are copied into it
-  * All of the blog articles are copied into the root of the build directory, including `template.html` as `index.html` (to act as a website entry point)
+- The `src/generator/new.mjs` node script creates a new article yaml file from `src/template/article.yaml`
+  * If a name is not specified, a unique name using the current date will be used
+  * If a name is specified, then the article heading property in the generated article config will be auto-filled with it.
+- The `src/generator/build.mjs` script creates a build/ directory and builds the articles
+  * Backups are first created for all articles
+  * The required directories are copied into the build/ directory
+  * All of the blog articles are built in the build/ directory, including an `index.html` file for the featured article (to act as a website entry point)
   * Non-minified CSS and JS files are minified
-
-## Limitations/Caveats
-
-- As of right now, updating the side bar is a bit tedious, since it's easy to mess up dates
-  * In the future, I'd like to have the script automatically generate sidebar links using the existing html files and the current date, instead of having that hardcoded in
-- There isn't much freedom, which is by design. Anything can be posted in the article section, but that's it
-- Everything is hardcoded into the template.html file
-- There is a backup mechanism for articles, but also use version control and check your diffs to be safe.
 
 ## Planned Features
 
-- ~~Social media links, possibly in the footer or sidebar~~
-- A way to use JSON or some other format to store blog articles and auto-generate new posts and links from that
-    * This planned feature is up in the air, because I don't want to make it too easy to create AI slop blogs
 - Some way to handle scaling the sidebar with article links
-    * It shouldn't grow longer and longer forever. It would need to partially collapse or link to a new page with more articles
-- ~~Better minification~~
-- ~~About Page~~
+    * It shouldn't grow longer and longer forever
 
 ## Contributions
 
-I'll accept contributions to fix bugs, but new unplanned features may be rejected on the grounds that the blog site is supposed to be very minimal.  Personally, if I ever need to scale this up to something that is not so minimal, I'll fork it and go from there.
+I'll accept contributions to fix bugs, but new unplanned features may be rejected on the grounds that the blog site is supposed to be very minimal. If I ever need to scale this up to something that is not so minimal, I'll fork it and go from there.
 
 Also please remember to run the prettier script before submitting a pull request.
 

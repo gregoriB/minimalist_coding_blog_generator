@@ -2,34 +2,11 @@ import fs from "fs";
 import path from "path";
 import yaml from "js-yaml";
 
-import { JSDOM } from "jsdom";
 import { colors, directories, templates } from "./variables.mjs";
 import { query, getFormattedDateName } from "./helpers.mjs";
 
 const { GRAY, RED, CYAN, GREEN, BLUE, ORANGE, CLEAR } = colors;
 const { articlesDir, sourceDir, siteDir, templatesDir } = directories;
-
-async function createArticleHTML(fileName) {
-  const article = templates.article;
-
-  if (!fileName) {
-    fileName = getFormattedDateName();
-  }
-
-  if (!fs.existsSync(articlesDir)) {
-    fs.mkdirSync(articlesDir);
-  }
-
-  const templatePath = path.join(
-    sourceDir,
-    templatesDir,
-    `${article.name}.html`,
-  );
-  const newArticlePath = path.join(articlesDir, `${fileName}.html`);
-  fs.copyFileSync(templatePath, newArticlePath);
-
-  return newArticlePath;
-}
 
 async function createArticleYAML(fileName) {
   const article = templates.article;
@@ -50,6 +27,9 @@ async function createArticleYAML(fileName) {
   const date = new Date();
   const dateFormatted = date.toISOString().slice(0, 19);
   parsed.DATE_TIME = dateFormatted;
+  if (fileName) {
+    parsed.HEADING = fileName;
+  }
 
   const yamlString = yaml.dump(parsed, { noRefs: true });
 

@@ -51,8 +51,6 @@ export const configs = {
   article: { name: "article", format: "yaml" },
 };
 
-export const templateFile = "template.html";
-
 export const commands = {
   HELP_SHORT: "-h",
   HELP: "help",

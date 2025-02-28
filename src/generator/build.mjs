@@ -1,5 +1,5 @@
 import fs from "fs";
-import { colors, directories, templateFile } from "./variables.mjs";
+import { colors, directories } from "./variables.mjs";
 import { copyDir, generateBlogPosts } from "./helpers.mjs";
 
 const { GRAY, RED, CYAN, GREEN, BLUE, ORANGE, MAGENTA, CLEAR } = colors;
