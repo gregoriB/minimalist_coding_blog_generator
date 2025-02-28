@@ -20,6 +20,7 @@ async function main() {
       break;
     case BUILD:
       console.log(`${leftPadding}${MAGENTA}   Generating Blog${CLEAR}`, "\n");
+      backup();
       build(args[1]);
       break;
     case HELP:
