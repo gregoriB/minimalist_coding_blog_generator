@@ -57,10 +57,8 @@ export const commands = {
   HELP_SHORT: "-h",
   HELP: "help",
   BACKUP: "backup",
-  UPDATE: "update",
   BUILD: "build",
   NEW: "new",
-  ALL: "all",
 };
 
 export const months = [

@@ -1,12 +1,11 @@
 import create from "./src/generator/new.mjs";
 import build from "./src/generator/build.mjs";
 import backup from "./src/generator/backup.mjs";
-import update from "./src/generator/update.mjs";
 import help from "./src/generator/help.mjs";
 
 import { colors, commands, leftPadding } from "./src/generator/variables.mjs";
 const { GRAY, RED, CYAN, GREEN, BLUE, ORANGE, MAGENTA, CLEAR } = colors;
-const { HELP, HELP_SHORT, NEW, BACKUP, UPDATE, BUILD, ALL } = commands;
+const { HELP, HELP_SHORT, NEW, BACKUP, BUILD } = commands;
 
 async function main() {
   const args = process.argv.slice(2);
@@ -20,13 +19,8 @@ async function main() {
       backup();
       break;
     case BUILD:
-      build(args[1]);
-      break;
-    case ALL:
       console.log(`${leftPadding}${MAGENTA}   Generating Blog${CLEAR}`, "\n");
-      backup();
-      await update();
-      build();
+      build(args[1]);
       break;
     case HELP:
     case HELP_SHORT:

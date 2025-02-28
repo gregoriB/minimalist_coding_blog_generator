@@ -112,26 +112,6 @@ export async function getTemplatePageDOM() {
   return pageDom;
 }
 
-function getFilesByDate(dir, byModification = false) {
-  return fs
-    .readdirSync(dir)
-    .map((file) => {
-      const filePath = path.join(dir, file);
-      const stats = fs.statSync(filePath);
-      const time = byModification ? stats.mtimeMs : stats.birthtimeMs;
-      const date = new Date(byModification ? stats.mtimeMs : stats.birthtimeMs);
-      const month = date.getMonth();
-      return {
-        file,
-        timeMS: time,
-        day: date.getDate(),
-        month: { name: months[month], index: month },
-        year: date.getFullYear(),
-      };
-    })
-    .sort((a, b) => b.time - a.time);
-}
-
 function getFilesByDateYAML(dir, fileExtension = ".yaml") {
   return fs
     .readdirSync(dir)
@@ -161,7 +141,7 @@ function getFilesByDateYAML(dir, fileExtension = ".yaml") {
         year: date.getFullYear(),
       };
     })
-    .sort((a, b) => b.datetime - a.datetime);
+    .sort((a, b) => new Date(b.datetime) - new Date(a.datetime));
 }
 
 function replaceSpecialChars(str, char = "") {
@@ -177,14 +157,16 @@ async function createNewSidebarSectionHTML(title, url, month, year) {
     `${templates.sidebar.name}.html`,
   );
   const sideBarDom = await JSDOM.fromFile(sidebarPath);
+  const sideBarHTML = await query(sideBarDom, "html");
   const sideBar = await query(sideBarDom, "[data-find='side-bar-section']");
 
-  let newHTML = sideBar.outerHTML;
+  let newHTML = sideBar.innerHTML;
   newHTML = newHTML.replace("{{ARTICLE_LINK}}", `${url}`);
   newHTML = newHTML.replace("{{ARTICLE_TITLE}}", `${title}`);
   newHTML = newHTML.replace("{{ARTICLE_DATE}}", `${month} ${year}`);
+  sideBarHTML.innerHTML = newHTML;
 
-  return newHTML;
+  return sideBarDom;
 }
 
 async function updateSidebarLinks(sidebarDom, pageDom, fileData, url) {
@@ -200,7 +182,7 @@ async function updateSidebarLinks(sidebarDom, pageDom, fileData, url) {
   );
   const dateText = replaceSpecialChars(date.textContent, " ").trim();
   const [dateMonth, dateYear] = dateText.split(" ");
-  const newHTML = await createNewSidebarSectionHTML(
+  const newEntryDom = await createNewSidebarSectionHTML(
     titleText,
     url,
     month.name,
@@ -208,14 +190,15 @@ async function updateSidebarLinks(sidebarDom, pageDom, fileData, url) {
   );
 
   if (dateMonth != month.name || dateYear != year) {
+    const newHTML = newEntryDom.window.document.body.innerHTML.trim();
     if (!months.includes(dateMonth)) {
-      firstSideBarSection.outerHTML = newHTML;
+      firstSideBarSection.innerHTML = newHTML;
     } else {
-      firstSideBarSection.parent.innerHTML =
-        newHTML + firstSideBarSection.parent.innerHTML;
+      firstSideBarSection.outerHTML = newHTML + firstSideBarSection.outerHTML;
     }
   } else {
-    const newItem = newSidebarSection.querySelector(
+    const newItem = await query(
+      newEntryDom,
       "[data-find='side-bar-section-item']",
     );
     const existingList = firstSideBarSection.querySelector(
@@ -226,7 +209,7 @@ async function updateSidebarLinks(sidebarDom, pageDom, fileData, url) {
 }
 
 async function populatePageFromYAML(pageDom, file) {
-  const { main, article } = configs;
+  const { main } = configs;
   const mainConfigPath = path.join(sourceDir, `${main.name}.${main.format}`);
   const articleConfigPath = path.join(articlesDir, `${file}`);
 
@@ -257,6 +240,7 @@ async function createPostsFromYAML(destDir, preferredPost) {
     ? `${preferredPost}.yaml`
     : articleFiles[0].file;
 
+  console.log(preferred);
   const sidebarPath = path.join(
     sourceDir,
     templatesDir,
