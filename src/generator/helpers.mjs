@@ -2,9 +2,16 @@ import UglifyJS from "uglify-js";
 import UglifyCSS from "uglifycss";
 import path from "path";
 import fs from "fs";
+import yaml from "js-yaml";
 import { JSDOM } from "jsdom";
 
-import { colors, directories, templates, months } from "./variables.mjs";
+import {
+  colors,
+  directories,
+  configs,
+  templates,
+  months,
+} from "./variables.mjs";
 const { GRAY, RED, CYAN, GREEN, BLUE, ORANGE, MAGENTA, CLEAR } = colors;
 const { articlesDir, sourceDir, siteDir, buildDir, templatesDir } = directories;
 
@@ -70,7 +77,8 @@ export function copyDir(src, dest, config = {}) {
  */
 export function getFormattedDateName() {
   const now = new Date();
-  const totalSeconds = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+  const totalSeconds =
+    now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
 
   return `${now.getFullYear()}_${now.getMonth() + 1}_${now.getDate()}_${totalSeconds}`;
 }
@@ -80,63 +88,34 @@ export async function query(dom, selector) {
 }
 
 export async function addElement(dom, data) {
-    const filePath = path.join(sourceDir, templatesDir, `${data.name}.html`);
-    const body = await query(dom, "body"); 
-    const tmplDom = await JSDOM.fromFile(filePath);
-    const tmpl = await query(tmplDom, data.selector);
-    if (data.name === templates.sidebar.name) {
-         body.innerHTML += `\n\n
-        <main class="content-container" data-find="blog-content" id="blog-main-content">
-        ${tmpl.outerHTML}
-        </main>
-        `;
-    } else if (data.name === templates.article.name) {
-        const mainContent = body.querySelector("[data-find='blog-content']");
-        mainContent.innerHTML += '\n\n' + tmpl.outerHTML;
-        console.log(mainContent.outerHTML)
-    } else {
-        body.innerHTML += '\n\n' + tmpl.outerHTML;
-    }
-}
-
-export async function createFullPageFile(fileName) {
-    const main = templates.main;
-    let headPath = `${sourceDir}${templatesDir}${main.name}.html`;
-
-    let pageDom = await JSDOM.fromFile(headPath);
-
-    for (let tmpl in templates) {
-        if (templates[tmpl].name == main.name) continue;
-
-        await addElement(pageDom, templates[tmpl]);
-    }
-
-    if (!fileName) {
-        fileName = getFormattedDateName();
-    }
-
-    const pagePath = path.join(sourceDir, siteDir, `${fileName}.html`);
-    fs.writeFileSync(pagePath, pageDom.serialize(), `utf8`);
+  const filePath = path.join(sourceDir, templatesDir, `${data.name}.html`);
+  const page = await query(dom, templates.main.selector);
+  const tmplDom = await JSDOM.fromFile(filePath);
+  const innerHTML = tmplDom.window.document.body.innerHTML.trim();
+  let pageHTML = page.innerHTML;
+  pageHTML = pageHTML.replace(data.marker, innerHTML);
+  page.innerHTML = pageHTML;
 }
 
 export async function getTemplatePageDOM() {
-    const main = templates.main;
-    let headPath = `${sourceDir}${templatesDir}${main.name}.html`;
+  const main = templates.main;
+  let headPath = `${sourceDir}${templatesDir}${main.name}.html`;
 
-    let pageDom = await JSDOM.fromFile(headPath);
+  let pageDom = await JSDOM.fromFile(headPath);
 
-    for (let tmpl in templates) {
-        if (templates[tmpl].name == main.name) continue;
+  for (let tmpl in templates) {
+    if (templates[tmpl].name == main.name) continue;
 
-        await addElement(pageDom, templates[tmpl]);
-    }
+    await addElement(pageDom, templates[tmpl]);
+  }
 
-    return pageDom;
+  return pageDom;
 }
 
 function getFilesByDate(dir, byModification = false) {
-  return fs.readdirSync(dir)
-    .map(file => {
+  return fs
+    .readdirSync(dir)
+    .map((file) => {
       const filePath = path.join(dir, file);
       const stats = fs.statSync(filePath);
       const time = byModification ? stats.mtimeMs : stats.birthtimeMs;
@@ -153,79 +132,158 @@ function getFilesByDate(dir, byModification = false) {
     .sort((a, b) => b.time - a.time);
 }
 
-function stripSpecialChars(str) {
-    if (!str) return "";
+function getFilesByDateYAML(dir, fileExtension = ".yaml") {
+  return fs
+    .readdirSync(dir)
+    .filter((file) => file.endsWith(fileExtension))
+    .map((file) => {
+      const filePath = path.join(dir, file);
+      const stats = fs.statSync(filePath);
+      const data = fs.readFileSync(filePath, "utf-8");
 
-    return str.replace(/[^a-zA-Z0-9]/g, ` `);
+      const parsed = yaml.load(data);
+      let uuid = String(stats.birthtimeMs);
+      if (parsed.DATE_TIME instanceof Date) {
+        uuid += parsed.DATE_TIME.toISOString();
+      } else {
+        uuid += parsed.DATE_TIME;
+      }
+      uuid = replaceSpecialChars(uuid, "_");
+      const date = new Date(parsed.DATE_TIME);
+      const month = date.getMonth();
+
+      return {
+        file,
+        uuid,
+        datetime: parsed.DATE_TIME,
+        day: date.getDate(),
+        month: { name: months[month], index: month },
+        year: date.getFullYear(),
+      };
+    })
+    .sort((a, b) => b.datetime - a.datetime);
+}
+
+function replaceSpecialChars(str, char = "") {
+  if (!str) return "";
+
+  return str.replace(/[^a-zA-Z0-9]/g, char);
 }
 
 async function createNewSidebarSectionHTML(title, url, month, year) {
-    const sidebarPath = path.join(sourceDir, templatesDir, `${templates.sidebar.name}.html`);
-    const sideBarDom = await JSDOM.fromFile(sidebarPath);
-    const sideBar = await query(sideBarDom, "[data-find='side-bar-section']");
+  const sidebarPath = path.join(
+    sourceDir,
+    templatesDir,
+    `${templates.sidebar.name}.html`,
+  );
+  const sideBarDom = await JSDOM.fromFile(sidebarPath);
+  const sideBar = await query(sideBarDom, "[data-find='side-bar-section']");
 
-    let newHTML = sideBar.outerHTML;
-    newHTML = newHTML.replace("{{ARTICLE_LINK}}", `${url}`)
-    newHTML = newHTML.replace("{{ARTICLE_TITLE}}", `${title}`)
-    newHTML = newHTML.replace("{{ARTICLE_DATE}}", `${month} ${year}`)
+  let newHTML = sideBar.outerHTML;
+  newHTML = newHTML.replace("{{ARTICLE_LINK}}", `${url}`);
+  newHTML = newHTML.replace("{{ARTICLE_TITLE}}", `${title}`);
+  newHTML = newHTML.replace("{{ARTICLE_DATE}}", `${month} ${year}`);
 
-    return newHTML;
+  return newHTML;
 }
 
-async function updateSidebarLinks(sidebarDom, articleDom, fileData, url) {
-    const { month, year}  = fileData;
-    const articleTitle = await query(articleDom, "[data-find='main-content-title']");
-    const titleText = articleTitle.textContent.trim();
-    const firstSideBarSection = await query(sidebarDom, "[data-find='side-bar-section']");
-    const date = firstSideBarSection.querySelector("[data-find='side-bar-section-date']");
-    const dateText = stripSpecialChars(date.textContent).trim();
-    const [dateMonth, dateYear] = dateText.split(" ");
-    const newHTML = await createNewSidebarSectionHTML(titleText, url, month.name, year);
+async function updateSidebarLinks(sidebarDom, pageDom, fileData, url) {
+  const { month, year } = fileData;
+  const articleTitle = await query(pageDom, "[data-find='main-content-title']");
+  const titleText = articleTitle.textContent.trim();
+  const firstSideBarSection = await query(
+    sidebarDom,
+    "[data-find='side-bar-section']",
+  );
+  const date = firstSideBarSection.querySelector(
+    "[data-find='side-bar-section-date']",
+  );
+  const dateText = replaceSpecialChars(date.textContent, " ").trim();
+  const [dateMonth, dateYear] = dateText.split(" ");
+  const newHTML = await createNewSidebarSectionHTML(
+    titleText,
+    url,
+    month.name,
+    year,
+  );
 
-    if (dateMonth != month.name || dateYear != year) {
-        if (!months.includes(dateMonth)) {
-            firstSideBarSection.outerHTML = newHTML;
-        } else {
-            firstSideBarSection.parent.innerHTML = newHTML + firstSideBarSection.parent.innerHTML;
-        }
+  if (dateMonth != month.name || dateYear != year) {
+    if (!months.includes(dateMonth)) {
+      firstSideBarSection.outerHTML = newHTML;
     } else {
-        const newItem = newSidebarSection.querySelector("[data-find='side-bar-section-item']"); 
-        const existingList = firstSideBarSection.querySelector("[data-find='side-bar-section-list']");
-        existingList.innerHTML = newItem.outerHTML + existingList.innerHTML;
+      firstSideBarSection.parent.innerHTML =
+        newHTML + firstSideBarSection.parent.innerHTML;
     }
+  } else {
+    const newItem = newSidebarSection.querySelector(
+      "[data-find='side-bar-section-item']",
+    );
+    const existingList = firstSideBarSection.querySelector(
+      "[data-find='side-bar-section-list']",
+    );
+    existingList.innerHTML = newItem.outerHTML + existingList.innerHTML;
+  }
 }
 
-async function createPosts(destDir, preferredPost) {
-  let articleFiles = getFilesByDate(articlesDir);
-  const preferred = preferredPost ? `${preferredPost}.html` : articleFiles[0];
+async function populatePageFromYAML(pageDom, file) {
+  const { main, article } = configs;
+  const mainConfigPath = path.join(sourceDir, `${main.name}.${main.format}`);
+  const articleConfigPath = path.join(articlesDir, `${file}`);
 
-  const sidebarPath = path.join(sourceDir, templatesDir, `${templates.sidebar.name}.html`);
+  const mainConfigYaml = fs.readFileSync(mainConfigPath, "utf-8");
+  const articleConfigYaml = fs.readFileSync(articleConfigPath, "utf-8");
+
+  const mainParsed = yaml.load(mainConfigYaml);
+  const articleParsed = yaml.load(articleConfigYaml);
+
+  const page = await query(pageDom, "html");
+  let pageHTML = page.innerHTML;
+
+  for (let [key, value] of Object.entries(mainParsed)) {
+    pageHTML = pageHTML.replace(`{{${key}}}`, value);
+  }
+
+  for (let [key, value] of Object.entries(articleParsed)) {
+    value = value instanceof Date ? value.toISOString() : value;
+    pageHTML = pageHTML.replace(`{{${key}}}`, value);
+  }
+
+  page.innerHTML = pageHTML;
+}
+
+async function createPostsFromYAML(destDir, preferredPost) {
+  let articleFiles = getFilesByDateYAML(articlesDir);
+  const preferred = preferredPost
+    ? `${preferredPost}.yaml`
+    : articleFiles[0].file;
+
+  const sidebarPath = path.join(
+    sourceDir,
+    templatesDir,
+    `${templates.sidebar.name}.html`,
+  );
   const sidebarDom = await JSDOM.fromFile(sidebarPath);
 
   for (const fileData of articleFiles) {
-    const { file, timeMS } = fileData;
+    const { file, uuid } = fileData;
     const articlePath = path.join(articlesDir, file);
-    if (fs.statSync(articlePath).isFile() && articlePath.endsWith(`.html`)) {
-      const pageDom = await getTemplatePageDOM();
-      const articleDom = await JSDOM.fromFile(articlePath);
-      const pageHtml = await query(pageDom, `html`);
-      const articleHtml = await query(articleDom, templates.article.selector);
 
-      let pageContent = pageHtml.querySelector(templates.article.selector);
-      pageContent.innerHTML = articleHtml.outerHTML;
-      
-        console.log(pageDom.serialize())
-      const newName = `${String(timeMS)}.html`;
+    if (fs.statSync(articlePath).isFile() && articlePath.endsWith(`.yaml`)) {
+      const pageDom = await getTemplatePageDOM();
+
+      await populatePageFromYAML(pageDom, file);
+
+      const newName = `${String(uuid)}.html`;
       const destPath = path.join(destDir, newName);
       fs.writeFileSync(destPath, pageDom.serialize(), `utf8`);
 
-      if (file == preferred.file) {
+      if (file == preferred) {
         const indexPath = path.join(destDir, `index.html`);
         fs.writeFileSync(indexPath, pageDom.serialize(), `utf8`);
         console.log(`${RED}${indexPath}${CLEAR} file created`);
       }
 
-      await updateSidebarLinks(sidebarDom, articleDom, fileData, newName);
+      await updateSidebarLinks(sidebarDom, pageDom, fileData, newName);
       console.log(`${RED}${destPath}${CLEAR} file created`);
     }
   }
@@ -248,5 +306,5 @@ async function createPosts(destDir, preferredPost) {
 }
 
 export async function generateBlogPosts(destDir, preferredPost) {
-    createPosts(destDir, preferredPost);
+  createPostsFromYAML(destDir, preferredPost);
 }

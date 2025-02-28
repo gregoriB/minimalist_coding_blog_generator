@@ -4,9 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>
-        {{SITE_TITLE}}
-    </title>
+    <title> {{SITE_TITLE}} </title>
 
     <link rel="stylesheet" href="styles/variables.css" />
     <link rel="stylesheet" href="styles/style.css" />
@@ -22,6 +20,21 @@
 
     <script src="scripts/index.js" defer></script>
     <script src="scripts/theme_toggle.js" defer></script>
+
   </head>
-  <body></body>
+  <body>
+
+      {{SITE_BANNER}}
+
+      <main class="content-container" data-find="blog-content" id="article-main-content">
+
+          {{SIDE_BAR}}
+
+          {{ARTICLE}}
+
+      </main>
+
+      {{SITE_FOOTER}}
+
+  </body>
 </html>

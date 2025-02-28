@@ -97,6 +97,12 @@ code {
   height: 100%;
 }
 
+#footer-social-links A[href=""],
+#footer-social-links A[href="#"],
+#footer-social-links A:not([href]) {
+  display: none;
+}
+
 #social-github-logo {
   background-image: var(--logo-social-github);
 }

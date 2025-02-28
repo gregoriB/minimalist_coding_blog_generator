@@ -7,7 +7,7 @@ import { query, generateBlogPosts } from "./helpers.mjs";
 const { GRAY, RED, CYAN, GREEN, BLUE, ORANGE, CLEAR } = colors;
 const { articlesDir, sourceDir, siteDir, buildDir } = directories;
 
-const templateFile = "template_old.html"
+const templateFile = "template_old.html";
 
 const indexDom = await JSDOM.fromFile(sourceDir + templateFile);
 

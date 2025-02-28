@@ -1,0 +1,51 @@
+HEADING: "This is the Blog Post Heading"
+SUB_HEADING: "This is a Sub-heading. It should be 1 to 2 sentences to concisely explain the points of the article"
+AUTHOR: "Some Blogger"
+AUTHOR_URL: "about.html"
+DATE_TIME: "2025-02-28T17:29:27"
+DISPLAY_DATE: "February 28th, 2025"
+CONTENT: |
+  <p>
+  Vulputate, urna dictum amet facilisi. Dignissim purus interdum feugiat aliquet, auctor justo nostra sollicitudin imperdiet. Venenatis scelerisque vitae rhoncus eros dis netus. Lorem maecenas nisi eleifend duis. Lobortis congue facilisi class euismod inceptos arcu phasellus taciti phasellus aliquet ultrices et. Dapibus ultrices at sit? Arcu sit scelerisque fames. Sem nascetur sodales, penatibus facilisi curae; primis. Etiam varius dapibus class magnis consectetur egestas lectus suscipit proin? Molestie dictumst odio lorem nam sodales lectus dolor condimentum pharetra curabitur aptent enim. Dis facilisi iaculis cras tristique habitant facilisis nam ridiculus in eu cum. Ad velit sodales, luctus neque.
+  </p>
+  Felis dis dictumst nostra elementum gravida blandit montes dui, bibendum nam cursus. Per eros elementum dictum dignissim vestibulum ultrices imperdiet scelerisque! Varius pretium urna aliquet fringilla blandit sit tortor cursus dignissim inceptos sollicitudin enim! Massa varius volutpat vitae suscipit habitasse faucibus curabitur ullamcorper sodales. Et porta venenatis dis phasellus libero tincidunt morbi. Posuere hendrerit himenaeos augue lacinia maecenas viverra sociis. Fermentum.
+  </p>
+  <pre>
+  <code>
+  async function createArticleYAML(fileName) {
+    const article = templates.article;
+
+    if (!fileName) {
+      fileName = getFormattedDateName();
+    }
+
+    if (!fs.existsSync(articlesDir)) {
+      fs.mkdirSync(articlesDir);
+    }
+
+    const yamlPath = path.join(sourceDir, templatesDir, `${article.name}.yaml`);
+    const newArticlePath = path.join(articlesDir, `${fileName}.yaml`);
+    const data = fs.readFileSync(yamlPath, "utf-8");
+    const parsed = yaml.load(data);
+
+    const date = new Date();
+    const dateFormatted = date.toISOString().slice(0, 19);
+    parsed.DATE_TIME = dateFormatted;
+
+    const yamlString = yaml.dump(parsed, { noRefs: true });
+
+    fs.writeFileSync(newArticlePath, yamlString, "utf8");
+
+    return newArticlePath;
+  }
+  </code>
+  </pre>
+  <p>
+  Rutrum sed interdum blandit dolor scelerisque nullam nibh proin blandit conubia. At taciti auctor consectetur et nisi vel platea vitae nulla erat. Sem vitae consequat dignissim ultricies ultricies orci urna scelerisque lacus. Velit quis ipsum per, ut phasellus consectetur phasellus! Tellus sed pulvinar tempus litora per rutrum magnis tortor aenean ante curae;. Nullam pretium elementum dolor congue tempus sapien leo.
+  </p>
+  <p>
+  Id fusce varius dictumst inceptos himenaeos facilisis vehicula congue. Ullamcorper blandit curabitur vestibulum. Gravida fermentum fermentum pretium montes libero. Elementum condimentum lacus at. Donec dictumst hac congue. Ut amet scelerisque volutpat arcu aenean ornare! Tellus mus curae;, tellus dapibus per orci malesuada porta duis. Hac, nam morbi tellus praesent sociis bibendum dignissim. Tellus venenatis, elementum dolor quam tellus! Malesuada montes turpis turpis netus! Porta sapien lectus id potenti. Quam laoreet nascetur.
+  </p>
+  <p>
+  Tristique etiam rutrum porta, inceptos ultrices. Donec pellentesque imperdiet blandit nec in aliquet. Ante tempus dictum, molestie cursus ornare. Turpis nunc posuere, pellentesque mauris. Fusce sem facilisis curae; penatibus gravida hac. Sociis imperdiet lacus euismod porttitor cum pulvinar diam risus elit at magna consectetur. Placerat vivamus molestie nascetur pellentesque pharetra habitant amet nunc faucibus aenean imperdiet. Accumsan per curabitur cras nisl lacus bibendum venenatis class sollicitudin donec! Integer duis commodo pharetra tortor vulputate congue. Diam nascetur.
+  </p>

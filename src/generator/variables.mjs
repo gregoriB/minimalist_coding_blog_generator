@@ -20,11 +20,35 @@ export const directories = {
 };
 
 export const templates = {
-    main: { name: "head", selector: "html" }, 
-    banner: { name: "banner", selector: "[data-find='banner']" }, 
-    sidebar: { name: "sidebar", selector: "[data-find='side-bar']" }, 
-    article: { name: "article", selector: "[data-find='main-content']" }, 
-    footer: { name: "footer", selector: "[data-find='footer']" },
+  main: {
+    name: "head",
+    selector: "html",
+  },
+  banner: {
+    name: "banner",
+    selector: "[data-find='banner']",
+    marker: "{{SITE_BANNER}}",
+  },
+  sidebar: {
+    name: "sidebar",
+    selector: "[data-find='side-bar']",
+    marker: "{{SIDE_BAR}}",
+  },
+  article: {
+    name: "article",
+    selector: "[data-find='main-content']",
+    marker: "{{ARTICLE}}",
+  },
+  footer: {
+    name: "footer",
+    selector: "[data-find='footer']",
+    marker: "{{SITE_FOOTER}}",
+  },
+};
+
+export const configs = {
+  main: { name: "config", format: "yaml" },
+  article: { name: "article", format: "yaml" },
 };
 
 export const templateFile = "template.html";
@@ -40,9 +64,18 @@ export const commands = {
 };
 
 export const months = [
-"January", "February", "March", "April", "May", "June",
-"July", "August", "September", "October", "November", "December"
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
-
 
 export const leftPadding = "     ";
