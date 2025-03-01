@@ -113,10 +113,11 @@ code {
 }
 
 #social-email-logo {
-  background-image: var(--logo-email-bmc);
+  background-image: var(--logo-social-email);
 }
 
 #social-x-logo {
+  transform: scale(0.8);
   background-image: var(--logo-social-x);
 }
 
@@ -126,6 +127,5 @@ code {
 }
 
 #social-patreon-logo {
-  transform: scale(1.1);
   background-image: var(--logo-social-patreon);
 }

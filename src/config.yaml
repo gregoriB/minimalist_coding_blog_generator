@@ -1,6 +1,7 @@
 SITE_TITLE: "Blog Site"
 SOCIAL_URL_GITHUB: "https://github.com/gregoriB/minimalist_coding_blog_site_generator"
 SOCIAL_URL_GITLAB: "https://google.com"
+SOCIAL_URL_EMAIL: "webmaster@example.com"
 SOCIAL_URL_X: "https://google.com"
 SOCIAL_URL_BMC: "https://google.com"
 SOCIAL_URL_PATREON: "https://google.com"
