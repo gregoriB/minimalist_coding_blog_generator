@@ -37,7 +37,7 @@ function main() {
       break;
     case BAD_COMMAND:
       // prettier-ignore
-      log(leftPadding, RED, "Command not value. Please use a valid command:", CLEAR, "\n");
+      log(leftPadding, RED, "Command is not valid. Please use a valid command:", CLEAR, "\n");
       help();
       break;
     default:
