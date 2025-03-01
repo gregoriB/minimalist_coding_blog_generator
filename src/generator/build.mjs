@@ -28,6 +28,16 @@ function verifyArticlesDir() {
   return true;
 }
 
+function verifyPreferred(preferred) {
+  if (!preferred) return;
+  const preferredFile = `${preferred}.${configs.article.format}`;
+
+  if (!fs.existsSync(articlesDir + preferredFile)) {
+    log("\n", RED, 'Article "', preferred, '" not found!', CLEAR, "\n");
+    throw new Error(`${articlesDir + preferredFile} article does not exist!`);
+  }
+}
+
 function makeBuildDir() {
   fs.rmSync(buildDir, { force: true, recursive: true });
   fs.mkdirSync(buildDir, { recursive: true });
@@ -44,6 +54,7 @@ export default async function createBuild(preferredPost) {
   try {
     log(CYAN, "Building", CLEAR, "\n");
 
+    verifyPreferred(preferredPost);
     verifyArticlesDir();
     makeBuildDir();
     await generateSite(buildDir, preferredPost);

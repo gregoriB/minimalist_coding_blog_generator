@@ -16,12 +16,21 @@ const { DISABLE_BACKUPS } = flags;
 
 function main() {
   const args = process.argv.slice(2);
-  const command = args[0] || BAD_COMMAND;
-  const noBackup = args.includes(DISABLE_BACKUPS);
+
+  const commandArgs = args.filter((arg) =>
+    Object.values(commands).includes(arg),
+  );
+  const flagArgs = args.filter((arg) => Object.values(flags).includes(arg));
+  const otherArgs = args.filter(
+    (arg) => !commandArgs.includes(arg) && !flagArgs.includes(arg),
+  );
+
+  const command = commandArgs[0] || BAD_COMMAND;
+  const noBackup = flagArgs.includes(DISABLE_BACKUPS);
 
   switch (command) {
     case NEW:
-      create(args[1]);
+      create(otherArgs[0]);
       break;
     case BACKUP:
       backup();
@@ -29,7 +38,7 @@ function main() {
     case BUILD:
       log(leftPadding, MAGENTA, "Generating Blog", CLEAR, "\n");
       backup(noBackup);
-      build(args[1]);
+      build(otherArgs[0]);
       break;
     case HELP:
     case HELP_SHORT:
