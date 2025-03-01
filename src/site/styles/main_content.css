@@ -11,6 +11,10 @@
   margin-left: 4rem;
 }
 
+#article-heading {
+  width: 100%;
+}
+
 #article-heading-title {
   font-weight: 600;
   color: rgb(var(--heading-color));
