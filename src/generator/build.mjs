@@ -40,13 +40,13 @@ function makeBuildDir() {
 /**
  * Create deployable build Dir
  */
-export default function createBuild(preferredPost) {
+export default async function createBuild(preferredPost) {
   try {
     log(CYAN, "Building", CLEAR, "\n");
 
     verifyArticlesDir();
     makeBuildDir();
-    generateSite(buildDir, preferredPost);
+    await generateSite(buildDir, preferredPost);
 
     log(GREEN, "Build complete!", CLEAR, "\n");
   } catch (error) {
