@@ -5,8 +5,18 @@ import { copyDir, log } from "./helpers.mjs";
 const { GRAY, RED, CYAN, GREEN, BLUE, ORANGE, MAGENTA, CLEAR } = colors;
 const { articlesDir, backupsDir } = directories;
 
-export default function createArticleBackups() {
-  if (!fs.existsSync(articlesDir)) return;
+export default function createArticleBackups(noBackups = false) {
+  log(CYAN, "Creating Backups", CLEAR, "\n");
+
+  if (noBackups) {
+    log(RED, "Backups disabled!\n", CLEAR);
+    return;
+  }
+
+  if (!fs.existsSync(articlesDir)) {
+    log(RED, "There is nothing to backup!\n", CLEAR);
+    return;
+  }
 
   if (!fs.existsSync(backupsDir)) {
     fs.mkdirSync(backupsDir);
@@ -18,7 +28,6 @@ export default function createArticleBackups() {
 
   fs.mkdirSync(backupsDir + newDir);
 
-  log(CYAN, "Creating Backups", CLEAR, "\n");
   copyDir(articlesDir, backupsDir + newDir);
   log();
 }

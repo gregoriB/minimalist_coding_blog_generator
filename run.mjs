@@ -28,9 +28,7 @@ function main() {
       break;
     case BUILD:
       log(leftPadding, MAGENTA, "Generating Blog", CLEAR, "\n");
-      if (!noBackup) {
-        backup();
-      }
+      backup(noBackup);
       build(args[1]);
       break;
     case HELP:
