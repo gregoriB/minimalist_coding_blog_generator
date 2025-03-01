@@ -9,12 +9,12 @@ export default function createArticleBackups(noBackups = false) {
   log(CYAN, "Creating Backups", CLEAR, "\n");
 
   if (noBackups) {
-    log(RED, "Backups disabled!\n", CLEAR);
+    log(RED, "Backups disabled!", CLEAR, '\n');
     return;
   }
 
   if (!fs.existsSync(articlesDir)) {
-    log(RED, "There is nothing to backup!\n", CLEAR);
+    log(RED, "There is nothing to backup!", CLEAR, '\n');
     return;
   }
 
