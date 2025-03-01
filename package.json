@@ -1,20 +1,18 @@
 {
   "name": "Minimal Code Blog Generator",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "run.mjs",
   "scripts": {
     "format": "npx prettier . -w",
     "generate": "node run.mjs"
   },
-  "author": "",
+  "author": "Brandon Gregori",
   "license": "ISC",
-  "description": "",
+  "description": "Minimalist blog site generator, focused toward software development and tech-related content",
   "devDependencies": {
     "jsdom": "^26.0.0",
     "uglify-js": "^3.19.3",
-    "uglifycss": "^0.0.29"
-  },
-  "dependencies": {
+    "uglifycss": "^0.0.29",
     "js-yaml": "^4.1.0"
   }
 }

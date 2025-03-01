@@ -58,11 +58,16 @@ export const configs = {
 };
 
 export const commands = {
+  BAD_COMMAND: "bad-command",
   HELP_SHORT: "-h",
   HELP: "help",
   BACKUP: "backup",
   BUILD: "build",
   NEW: "new",
+};
+
+export const flags = {
+  DISABLE_BACKUPS: "--no-backup",
 };
 
 export const months = [

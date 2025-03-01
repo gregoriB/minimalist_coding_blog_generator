@@ -1,11 +1,11 @@
-import { colors, leftPadding } from "./variables.mjs";
+import { colors, leftPadding, flags } from "./variables.mjs";
 import { log } from "./helpers.mjs";
 
 const { GRAY, RED, CYAN, GREEN, BLUE, ORANGE, MAGENTA, CLEAR } = colors;
 
 const ITALICS = "\x1b[3m";
 const BOLD = "\u001b[1m";
-const EXAMPLE = `${ITALICS}$ npm run generate <command>${CLEAR}`;
+const example = `${ITALICS}$ npm run generate <command> <option>${CLEAR}`;
 const MAX_FLAG_CHAR = 10;
 
 function createPadding(space) {
@@ -18,20 +18,26 @@ function helpLog(...args) {
 
 const noFlagFiller = createPadding(leftPadding.length * 2 + MAX_FLAG_CHAR + 3);
 
-const flagMessages = {
+const commandMessages = {
   NEW:
-    "Generate a new blog post template. A name for the generated file can be specified.\n" +
+    "Generate a new blog post template. A name for the generated file can be specified\n" +
     noFlagFiller +
     "If no name is specified, then the file name will be the current date",
 
   BUILD:
-    "Build the articles from articles/ and the site contents in src/site/ to a deployable build/ directory.\n" +
+    "Build the articles from articles/ and the site contents in src/site/ to a deployable build/ directory\n" +
     noFlagFiller +
-    "A preferred article can be specified by name as the featured article, otherwise the most recent article will be featured",
+    "A preferred article can be specified by name as the featured article, otherwise the most recent article will be featured\n" +
+    noFlagFiller +
+    "This option automatically creates backups of all articles to a new folder",
 
   BACKUP:
     "Backup the contents of articles/ to a new directory within the backups/ directory",
   HELP: "Display helpful usage information in the terminal",
+};
+
+const flagMessages = {
+  [flags.DISABLE_BACKUPS]: `Disables automatic article backups when used with the ${ITALICS}build${CLEAR} command`,
 };
 
 function getHelpStr(flag, message) {
@@ -45,9 +51,16 @@ function getHelpStr(flag, message) {
 
 export default function logHelp() {
   helpLog(CYAN, "Generator Usage Information", CLEAR, "\n");
-  helpLog(EXAMPLE, "\n");
-  helpLog("Commands:", "\n");
+  helpLog(example, "\n");
 
+  log();
+  helpLog(BOLD, "Commands:", CLEAR, "\n");
+  for (let m in commandMessages) {
+    helpLog(getHelpStr(m.toLowerCase(), commandMessages[m]), "\n");
+  }
+
+  log();
+  helpLog(BOLD, "Options:", CLEAR, "\n");
   for (let m in flagMessages) {
     helpLog(getHelpStr(m.toLowerCase(), flagMessages[m]), "\n");
   }
