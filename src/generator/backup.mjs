@@ -5,7 +5,7 @@ import { copyDir, log } from "./helpers.mjs";
 const { GRAY, RED, CYAN, GREEN, BLUE, ORANGE, MAGENTA, CLEAR } = colors;
 const { articlesDir, backupsDir } = directories;
 
-export default function createBackups() {
+export default function createArticleBackups() {
   if (!fs.existsSync(articlesDir)) return;
 
   if (!fs.existsSync(backupsDir)) {

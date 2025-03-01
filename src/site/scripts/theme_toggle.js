@@ -4,6 +4,16 @@ const defaultTheme = "dark";
 const otherTheme = "light";
 const themeSelector = "data-theme";
 
+function changeTheme(theme) {
+  document.getElementById("hljs-theme").href =
+    `deps/highlight/styles/${theme}.min.css`;
+
+  // reload iframes with new theme
+  document.querySelectorAll("iframe").forEach((el) => {
+    el.src += "";
+  });
+}
+
 function getThemeStyling(theme = defaultTheme) {
   return theme === "dark" ? darkStyling : lightStyling;
 }

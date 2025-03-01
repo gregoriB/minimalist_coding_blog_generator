@@ -1,13 +1,3 @@
-function changeTheme(theme) {
-  document.getElementById("hljs-theme").href =
-    `deps/highlight/styles/${theme}.min.css`;
-
-  // reload iframes with new theme
-  document.querySelectorAll("iframe").forEach((el) => {
-    el.src += "";
-  });
-}
-
 hljs.debugMode();
 hljs.addPlugin(
   new CopyButtonPlugin({

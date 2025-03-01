@@ -93,7 +93,11 @@ export function query(dom, selector) {
   return dom.window.document.querySelector(selector);
 }
 
-export async function addElement(dom, data) {
+/**
+ * Gets html from a template file and inserts the html into
+ * the DOM at the matching marker
+ */
+export async function addHTMLFromTemplate(dom, data) {
   const filePath = path.join(
     sourceDir,
     templatesDir,
@@ -107,7 +111,7 @@ export async function addElement(dom, data) {
   page.innerHTML = pageHTML;
 }
 
-export async function getTemplatePageDOM() {
+export async function buildPageFromTemplates() {
   const main = templates.main;
   let headPath = `${sourceDir}${templatesDir}${main.name}.${fileFormats.html}`;
 
@@ -116,13 +120,17 @@ export async function getTemplatePageDOM() {
   for (let tmpl in templates) {
     if (templates[tmpl].name == main.name) continue;
 
-    await addElement(pageDom, templates[tmpl]);
+    await addHTMLFromTemplate(pageDom, templates[tmpl]);
   }
 
   return pageDom;
 }
 
-function getFilesByDate(dir, fileExtension) {
+/**
+ * Gets file data from a directory by extension, and sort it by the most recent date.
+ * Uses the date from the file content for sorting, and returns date and file data.
+ */
+function getFileDataByDate(dir, fileExtension) {
   return fs
     .readdirSync(dir)
     .filter((file) => file.endsWith(fileExtension))
@@ -180,13 +188,19 @@ async function createNewSidebarSection(title, url, month, year) {
   return sideBarDom;
 }
 
-function reverseElements(dom, container) {
-  const parent = query(dom, container);
+function reverseElements(dom, selector) {
+  const parent = query(dom, selector);
   const children = Array.from(parent.children).reverse();
 
   children.forEach((child) => parent.appendChild(child));
 }
 
+/**
+ * Creates or updates a new sidebar section based on the existing
+ * section dates.  If no matching section exists, a new one is created
+ * and added to the sidebar, otherwise the new item is added to the
+ * existing section.
+ */
 async function updateSidebar(sidebarDom, pageDom, fileData, url) {
   const { month, year } = fileData;
   const articleTitle = query(pageDom, "[data-find='main-content-title']");
@@ -242,6 +256,9 @@ export function getConfigSerializer(format) {
   }
 }
 
+/**
+ * Insert data from the main and article configs into the DOM
+ */
 function populatePageFromConfigs(pageDom, file) {
   const { main, article } = configs;
 
@@ -272,8 +289,10 @@ function populatePageFromConfigs(pageDom, file) {
   page.innerHTML = pageHTML;
 }
 
-async function addNewSidebarToFiles(sidebarDom) {
-  reverseElements(sidebarDom, "[data-find='side-bar-link-sections']");
+/**
+ * Replaces the existing sidebar in the article html files with a new sidebar
+ */
+async function updateFileSidebars(sidebarDom) {
   const builtBlogFiles = fs.readdirSync(buildDir);
   for (const file of builtBlogFiles) {
     const filePath = path.join(buildDir, file);
@@ -292,6 +311,10 @@ async function addNewSidebarToFiles(sidebarDom) {
   }
 }
 
+/**
+ * Populates the DOM for the article page and writes it to a new HTML file.
+ * If the article is the preferred article, it is also copied into an index.html file
+ */
 function createArticle(pageDom, destDir, fileData, isPreferred) {
   const { file, uuid } = fileData;
   populatePageFromConfigs(pageDom, file);
@@ -311,9 +334,12 @@ function createArticle(pageDom, destDir, fileData, isPreferred) {
   return newName;
 }
 
+/**
+ * Builds the site from the article and other configs, and the contents of the site/ directory
+ */
 export async function generateSite(destDir, preferredPost) {
   const { article } = configs;
-  let articleFiles = getFilesByDate(articlesDir, article.format);
+  let articleFiles = getFileDataByDate(articlesDir, article.format);
   const preferred = preferredPost
     ? `${preferredPost}.${article.format}`
     : articleFiles[0].file;
@@ -333,19 +359,23 @@ export async function generateSite(destDir, preferredPost) {
       fs.statSync(articlePath).isFile() &&
       articlePath.endsWith(`.${article.format}`)
     ) {
-      const pageDom = await getTemplatePageDOM();
+      const pageDom = await buildPageFromTemplates();
+      const isPreferred = file === preferred;
       const articleBuiltName = createArticle(
         pageDom,
         destDir,
         fileData,
-        file === preferred,
+        isPreferred,
       );
 
       await updateSidebar(sidebarDom, pageDom, fileData, articleBuiltName);
     }
   }
 
-  await addNewSidebarToFiles(sidebarDom);
+  // Since the sidebar is updated in reverse order,
+  // the order needs to be reversed before being added
+  reverseElements(sidebarDom, "[data-find='side-bar-link-sections']");
+  await updateFileSidebars(sidebarDom);
 
   log("\n");
 }
