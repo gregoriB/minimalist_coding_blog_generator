@@ -1,4 +1,6 @@
 import { colors, leftPadding } from "./variables.mjs";
+import { log } from "./helpers.mjs";
+
 const { GRAY, RED, CYAN, GREEN, BLUE, ORANGE, MAGENTA, CLEAR } = colors;
 
 const ITALICS = "\x1b[3m";
@@ -10,11 +12,8 @@ function createPadding(space) {
   return new Array(space).fill(" ").join("");
 }
 
-function log(...args) {
-  let str = "";
-  for (let i = 0; i < args.length; i++) str += `${args[i]}`;
-
-  console.log(`${leftPadding}${str}`);
+function helpLog(...args) {
+  log(leftPadding, ...args);
 }
 
 const noFlagFiller = createPadding(leftPadding.length * 2 + MAX_FLAG_CHAR + 3);
@@ -45,13 +44,13 @@ function getHelpStr(flag, message) {
 }
 
 export default function logHelp() {
-  log(CYAN, "Generator Usage Information", CLEAR, "\n");
-  log(EXAMPLE, "\n");
-  log("Commands:", "\n");
+  helpLog(CYAN, "Generator Usage Information", CLEAR, "\n");
+  helpLog(EXAMPLE, "\n");
+  helpLog("Commands:", "\n");
 
   for (let m in flagMessages) {
-    log(getHelpStr(m.toLowerCase(), flagMessages[m]), "\n");
+    helpLog(getHelpStr(m.toLowerCase(), flagMessages[m]), "\n");
   }
 
-  log("\n");
+  helpLog("\n");
 }

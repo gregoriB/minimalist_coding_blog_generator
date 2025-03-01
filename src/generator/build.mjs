@@ -1,6 +1,6 @@
 import fs from "fs";
 import { colors, directories } from "./variables.mjs";
-import { copyDir, generateBlogPosts } from "./helpers.mjs";
+import { copyDir, generateSite, log } from "./helpers.mjs";
 
 const { GRAY, RED, CYAN, GREEN, BLUE, ORANGE, MAGENTA, CLEAR } = colors;
 const { articlesDir, sourceDir, siteDir, buildDir } = directories;
@@ -24,22 +24,22 @@ function checkArticlesDir() {
 function makeBuildDir() {
   fs.rmSync(buildDir, { force: true, recursive: true });
   fs.mkdirSync(buildDir, { recursive: true });
-  console.log(`${GRAY}Creating deployable build${CLEAR}`);
+  console.log(GRAY, "Creating deployable build", CLEAR);
   copyDir(sourceDir + siteDir, buildDir, { minify: true });
 }
 
 /**
  * Create deployable build Dir
  */
-export default async function createBuild(preferredPost) {
+export default function createBuild(preferredPost) {
   try {
-    console.log(`${CYAN}Building${CLEAR}`, "\n");
+    log(CYAN, "Building", CLEAR, "\n");
     checkArticlesDir();
     makeBuildDir();
-    generateBlogPosts(buildDir, preferredPost);
-    console.log(`${GREEN}Build complete!${CLEAR}`, "\n");
+    generateSite(buildDir, preferredPost);
+    log(GREEN, "Build complete!", CLEAR, "\n");
   } catch (error) {
     console.error(`ERROR PROCESSING FILES:`, error);
-    console.log(`${ORANGE}!!! STOPPING BUILD !!!${CLEAR}`);
+    log(ORANGE, "!!! STOPPING BUILD !!!", CLEAR);
   }
 }

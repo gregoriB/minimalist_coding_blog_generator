@@ -1,9 +1,9 @@
 import fs from "fs";
 import { colors, directories } from "./variables.mjs";
-import { copyDir } from "./helpers.mjs";
+import { copyDir, log } from "./helpers.mjs";
 
 const { GRAY, RED, CYAN, GREEN, BLUE, ORANGE, MAGENTA, CLEAR } = colors;
-const { articlesDir, sourceDir, siteDir, buildDir, backupsDir } = directories;
+const { articlesDir, backupsDir } = directories;
 
 export default function createBackups() {
   if (!fs.existsSync(articlesDir)) return;
@@ -18,7 +18,7 @@ export default function createBackups() {
 
   fs.mkdirSync(backupsDir + newDir);
 
-  console.log(`${CYAN}Creating Backups${CLEAR}`, "\n");
+  log(CYAN, "Creating Backups", CLEAR, "\n");
   copyDir(articlesDir, backupsDir + newDir);
-  console.log();
+  log();
 }

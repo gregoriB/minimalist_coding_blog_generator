@@ -10,6 +10,12 @@ export const colors = {
   ORANGE: `\x1b[38,5,214m`,
 };
 
+export const fileFormats = {
+  yaml: "yaml",
+  json: "json",
+  html: "html",
+};
+
 export const directories = {
   backupsDir: "backups/",
   sourceDir: "src/",
@@ -47,8 +53,8 @@ export const templates = {
 };
 
 export const configs = {
-  main: { name: "config", format: "yaml" },
-  article: { name: "article", format: "yaml" },
+  main: { name: "config", format: fileFormats.yaml },
+  article: { name: "article", format: fileFormats.yaml },
 };
 
 export const commands = {
