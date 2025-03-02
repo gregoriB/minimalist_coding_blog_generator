@@ -146,14 +146,28 @@ export function query(dom, selector) {
  * Gets html from a template file and inserts the html into
  * the DOM at the matching marker
  */
-export async function addHTMLFromTemplate(dom, data) {
-  const filePath = path.join(templatesDir, `${data.name}.${fileFormats.html}`);
-  const page = query(dom, templates.main.selector);
+export async function addHTMLFromTemplate(dom, templateData) {
+  if (!templateData.marker) return;
+
+  const filePath = path.join(
+    templatesDir,
+    `${templateData.name}.${fileFormats.html}`,
+  );
+
   const tmplDom = await getFileDom(filePath);
-  const innerHTML = tmplDom.window.document.body.innerHTML.trim();
-  let pageHTML = page.innerHTML;
-  pageHTML = pageHTML.replaceAll(data.marker, innerHTML);
-  page.innerHTML = pageHTML;
+
+  let main = query(dom, templates.main.selector);
+  let tmpl = query(tmplDom, templateData.selector);
+  main.innerHTML = main.innerHTML.replaceAll(
+    templateData.marker,
+    tmpl.outerHTML,
+  );
+}
+
+export async function addHTMLFromTemplates(pageDom) {
+  for (let tmpl in templates) {
+    await addHTMLFromTemplate(pageDom, templates[tmpl]);
+  }
 }
 
 export async function buildPageFromTemplates() {
@@ -161,12 +175,7 @@ export async function buildPageFromTemplates() {
   let headPath = `${templatesDir}${main.name}.${fileFormats.html}`;
 
   let pageDom = await getFileDom(headPath);
-
-  for (let tmpl in templates) {
-    if (templates[tmpl].name == main.name) continue;
-
-    await addHTMLFromTemplate(pageDom, templates[tmpl]);
-  }
+  await addHTMLFromTemplates(pageDom);
 
   return pageDom;
 }
@@ -387,6 +396,7 @@ export async function populateHTMLFromConfigs(targetDir) {
   for (let file of files) {
     const filePath = path.join(targetDir, file);
     const dom = await getFileDom(filePath, file);
+    await addHTMLFromTemplates(dom);
     populatePageFromConfigDirs(dom, [
       { dir: configs.main.dir, format: configs.main.format },
     ]);

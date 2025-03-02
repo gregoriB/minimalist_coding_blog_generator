@@ -28,8 +28,13 @@ export const directories = {
 
 export const templates = {
   main: {
-    name: "head",
+    name: "page",
     selector: "html",
+  },
+  head: {
+    name: "head",
+    selector: "head",
+    marker: "{{SITE_HEAD}}",
   },
   banner: {
     name: "banner",

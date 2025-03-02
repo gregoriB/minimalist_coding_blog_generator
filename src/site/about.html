@@ -1,47 +1,11 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
-    <title> {{SITE_TITLE}} </title>
-    <link rel="shortcut icon" type="image/jpg" href="assets/images/favicon.png"/>
+  {{SITE_HEAD}}
 
-    <link rel="stylesheet" href="styles/variables.css" />
-    <link rel="stylesheet" href="styles/style.css" />
-    <link rel="stylesheet" href="styles/main_content.css" />
-    <link rel="stylesheet" href="styles/theme_toggle.css" />
-    <link rel="stylesheet" href="styles/side_bar.css" />
-
-    <link id="hljs-theme" rel="stylesheet" href="deps/highlight/styles/atom-one-dark.min.css">
-    <script src="deps/highlight/highlight.min.js" defer></script>
-
-    <link rel="stylesheet" href="deps/highlight_copy_button/styles/styles.css">
-    <script src="deps/highlight_copy_button/highlight-copy.min.js" defer></script>
-
-    <script src="scripts/index.js" defer></script>
-    <script src="scripts/theme_toggle.js" defer></script>
-
-  </head>
   <body>
 
-    <header data-find="header" class="site-banner" class="hide-in-iframe">
-
-      <!-- TEMPLATE SECTION                                          -->
-      <!-- SITE LOGO IMAGE GOES HERE.                                -->
-      <!-- CHECKOUT THE CSS TO SEE HOW THE IMAGE IS CURRENTLY LOADED -->
-      <!-- REMOVE THE PLACEHOLDER DATA AND REPLACE IT WITH REAL DATA -->
-
-      <h1 data-find="header-logo" id="banner-logo" alt="svg site logo"></h1>
-      <div data-find="header-theme-switcher" class="theme-switch-wrapper">
-        <label class="theme-switch" for="checkbox">
-          <input type="checkbox" id="checkbox">
-          <div class="slider round"></div>
-        </label>
-        <em id="theme-switch-text">toggle theme</em>
-      </div>
-    </header>
+    {{SITE_BANNER}}
 
     <main class="content-container" class="main-content" id="about-main-content">
       <nav class="side-bar" id="about-side-bar" data-find="about-side-bar">
@@ -62,48 +26,12 @@
         </section>
 
         <section data-find="main-content-body" id="article-body">
-
-          <!-- TEMPLATE SECTION                                          -->
-          <!-- ABOUT THE AUTHOR DATA                                     -->
-          <!-- REMOVE THE PLACEHOLDER DATA AND REPLACE IT WITH REAL DATA -->
-
-          <p>
-            Lectus senectus faucibus pulvinar mattis imperdiet quisque lacus?
-            Velit ut sagittis torquent pellentesque netus quam consequat
-            penatibus. Nunc arcu conubia odio aliquam arcu aliquet eu ornare
-            enim? Cursus mollis vivamus sem vestibulum ridiculus lacinia. Platea
-            blandit arcu aliquet. Vitae mus sodales fringilla auctor dignissim
-            faucibus sollicitudin natoque consectetur mattis. Erat nunc, id erat
-            neque libero lorem. Imperdiet platea quis praesent varius facilisis
-            mauris amet facilisis hendrerit. Suspendisse libero ultricies sed,
-            pharetra aliquet tempor aenean consectetur magnis at accumsan!
-            Hendrerit fermentum curae; facilisi! Metus curabitur nostra
-            consectetur.
-          </p>
+            {{ABOUT_ME_CONTENT}}
         </section>
       </article>
     </main>
-  <footer data-find="footer" class="site-footer" id="about-footer">
-    <section id="footer-social-links">
-        <a href="{{SOCIAL_URL_GITHUB}}">
-            <div title="Github" id="social-github-logo"></div>
-        </a>
-        <a href="{{SOCIAL_URL_GITLAB}}">
-            <div title="Gitlab" id="social-gitlab-logo"></div>
-        </a>
-        <a href="mailto:{{SOCIAL_URL_EMAIL}}">
-            <div title="Email" id="social-email-logo"></div>
-        </a>
-        <a href="{{SOCIAL_URL_X}}">
-            <div title="X" id="social-x-logo"></div>
-        </a>
-        <a href="{{SOCIAL_URL_BMC}}">
-            <div title="Buy Me a Coffee" id="social-bmc-logo"></div>
-        </a>
-        <a href="{{SOCIAL_URL_PATREON}}">
-            <div title="Patreon" id="social-patreon-logo"></div>
-        </a>
-    </section>
-  </footer>
+
+  {{SITE_FOOTER}}
+
   </body>
 </html>
