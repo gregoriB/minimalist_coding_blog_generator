@@ -33,23 +33,25 @@ Building can also include a the name of a file to be the featured article:
 ```sh
 $ npm run generate build "My First Blog Post"
 ```
-
-## Deployment
-
-Running `$ npm run generate build` generates a build directory with everything needed to deploy the website.
-
-## Notes
+<br>
 
 - Articles are in `.yaml` format.  Be sure to use yaml syntax verification!  Running `npm run format` should catch yaml errors, but it will not correct them.
 - All of the content of `src/site/` will be included in the site build
-- The `src/generator/new.mjs` node script creates a new article yaml file from `src/template/article.yaml`
+- All non-article configs go in the `src/configs/` directory
+  * Markers in the HTML which match any config entries will be replaced with that data. <br>
+  eg: if `{{SITE_TITLE}}` exists in an HTML file and matches a config key `SITE_TITLE`, that data is inserted in its place
+- The `new` command script creates a new article yaml file from `src/template/article.yaml`
   * If a name is not specified, a unique name using the current date will be used
   * If a name is specified, then the article heading property in the generated article config will be auto-filled with it.
-- The `src/generator/build.mjs` script creates a build/ directory and builds the articles
+- The `build` command creates a build/ directory and builds the articles
   * Backups are first created for all articles
   * The required directories are copied into the build/ directory
   * All of the blog articles are built in the build/ directory, including an `index.html` file for the featured article (to act as a website entry point)
   * Non-minified CSS and JS files are minified
+
+## Deployment
+
+Running `$ npm run generate build` generates a build directory with everything needed to deploy the website.
 
 ## Planned Features
 

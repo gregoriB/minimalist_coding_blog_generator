@@ -14,7 +14,7 @@ import {
   fileFormats,
 } from "./variables.mjs";
 const { GRAY, RED, CYAN, GREEN, BLUE, ORANGE, MAGENTA, CLEAR } = colors;
-const { articlesDir, sourceDir, buildDir, templatesDir } = directories;
+const { articlesDir, siteDir, buildDir, templatesDir } = directories;
 
 export function log(...args) {
   let str = "";
@@ -41,89 +41,15 @@ function canMinify(file) {
   return false;
 }
 
-/**
- * Creates a recursive copy of a directory
- *
- * @param {string} src - Source directory
- * @param {string} dest - Destination directory
- * @param {object} config
- * @param {bool} config.minify
- * @param {bool} config.copySrc - Should copy src directory itself into dest, rather than copying the contents of src
- */
-export function copyDir(src, dest, config = {}) {
-  let destPath = config.copySrc ? path.join(dest, path.basename(src)) : dest;
-
-  fs.mkdirSync(destPath, { recursive: true });
-  fs.readdirSync(src).forEach((file) => {
-    const srcPath = path.join(src, file);
-    const finalDestPath = path.join(destPath, file);
-
-    if (fs.lstatSync(srcPath).isDirectory()) {
-      config.copySrc = true;
-      copyDir(srcPath, destPath, config);
-    } else {
-      if (canMinify(file) && config.minify) {
-        let content = fs.readFileSync(srcPath, "utf8");
-        content = canMinifyJS(file)
-          ? UglifyJS.minify(content).code
-          : UglifyCSS.processString(content);
-        fs.writeFileSync(finalDestPath, content);
-      } else {
-        fs.copyFileSync(srcPath, finalDestPath);
-      }
-    }
-  });
-
-  log(MAGENTA, src, CLEAR, GRAY, " copied to ", CLEAR, BLUE, destPath, CLEAR);
+function getMinified(filePath) {
+  let content = fs.readFileSync(filePath, "utf8");
+  return canMinifyJS(filePath)
+    ? UglifyJS.minify(content).code
+    : UglifyCSS.processString(content);
 }
 
-/**
- * Creates a date string based on the current date, using this format:
- * <year>_<month>_<day>_<total_seconds>
- */
-export function getFormattedDateName() {
-  const now = new Date();
-  const totalSeconds =
-    now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
-
-  return `${now.getFullYear()}_${now.getMonth() + 1}_${now.getDate()}_${totalSeconds}`;
-}
-
-export function query(dom, selector) {
-  return dom.window.document.querySelector(selector);
-}
-
-/**
- * Gets html from a template file and inserts the html into
- * the DOM at the matching marker
- */
-export async function addHTMLFromTemplate(dom, data) {
-  const filePath = path.join(
-    sourceDir,
-    templatesDir,
-    `${data.name}.${fileFormats.html}`,
-  );
-  const page = query(dom, templates.main.selector);
-  const tmplDom = await JSDOM.fromFile(filePath);
-  const innerHTML = tmplDom.window.document.body.innerHTML.trim();
-  let pageHTML = page.innerHTML;
-  pageHTML = pageHTML.replaceAll(data.marker, innerHTML);
-  page.innerHTML = pageHTML;
-}
-
-export async function buildPageFromTemplates() {
-  const main = templates.main;
-  let headPath = `${sourceDir}${templatesDir}${main.name}.${fileFormats.html}`;
-
-  let pageDom = await JSDOM.fromFile(headPath);
-
-  for (let tmpl in templates) {
-    if (templates[tmpl].name == main.name) continue;
-
-    await addHTMLFromTemplate(pageDom, templates[tmpl]);
-  }
-
-  return pageDom;
+export function getFiles(dir, fileExtension) {
+  return fs.readdirSync(dir).filter((file) => file.endsWith(fileExtension));
 }
 
 /**
@@ -169,13 +95,88 @@ function replaceSpecialChars(str, char = "") {
   return str.replace(/[^a-zA-Z0-9]/g, char);
 }
 
+/**
+ * Creates a recursive copy of a directory
+ *
+ * @param {string} src - Source directory
+ * @param {string} dest - Destination directory
+ * @param {object} config
+ * @param {bool} config.minify
+ * @param {bool} config.copySrc - Should copy src directory itself into dest, rather than copying the contents of src
+ */
+export function copyDir(src, dest, config = {}) {
+  let destPath = config.copySrc ? path.join(dest, path.basename(src)) : dest;
+
+  fs.mkdirSync(destPath, { recursive: true });
+  fs.readdirSync(src).forEach((file) => {
+    const filePath = path.join(src, file);
+    const finalDestPath = path.join(destPath, file);
+
+    if (fs.lstatSync(filePath).isDirectory()) {
+      copyDir(filePath, destPath, { ...config, copySrc: true });
+    } else {
+      if (canMinify(file) && config.minify) {
+        fs.writeFileSync(finalDestPath, getMinified(filePath));
+      } else {
+        fs.copyFileSync(filePath, finalDestPath);
+      }
+    }
+  });
+
+  log(MAGENTA, src, CLEAR, GRAY, " copied to ", CLEAR, BLUE, destPath, CLEAR);
+}
+
+/**
+ * Creates a date string based on the current date, using this format:
+ * <year>_<month>_<day>_<total_seconds>
+ */
+export function getFormattedDateName() {
+  const now = new Date();
+  const totalSeconds =
+    now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+
+  return `${now.getFullYear()}_${now.getMonth() + 1}_${now.getDate()}_${totalSeconds}`;
+}
+
+export function query(dom, selector) {
+  return dom.window.document.querySelector(selector);
+}
+
+/**
+ * Gets html from a template file and inserts the html into
+ * the DOM at the matching marker
+ */
+export async function addHTMLFromTemplate(dom, data) {
+  const filePath = path.join(templatesDir, `${data.name}.${fileFormats.html}`);
+  const page = query(dom, templates.main.selector);
+  const tmplDom = await getFileDom(filePath);
+  const innerHTML = tmplDom.window.document.body.innerHTML.trim();
+  let pageHTML = page.innerHTML;
+  pageHTML = pageHTML.replaceAll(data.marker, innerHTML);
+  page.innerHTML = pageHTML;
+}
+
+export async function buildPageFromTemplates() {
+  const main = templates.main;
+  let headPath = `${templatesDir}${main.name}.${fileFormats.html}`;
+
+  let pageDom = await getFileDom(headPath);
+
+  for (let tmpl in templates) {
+    if (templates[tmpl].name == main.name) continue;
+
+    await addHTMLFromTemplate(pageDom, templates[tmpl]);
+  }
+
+  return pageDom;
+}
+
 async function createNewSidebarSection(title, url, month, year) {
   const sidebarPath = path.join(
-    sourceDir,
     templatesDir,
     `${templates.sidebar.name}.${fileFormats.html}`,
   );
-  const sideBarDom = await JSDOM.fromFile(sidebarPath);
+  const sideBarDom = await getFileDom(sidebarPath);
   const sideBarHTML = sideBarDom.window.document.documentElement;
   const sideBar = query(sideBarDom, "[data-find='side-bar-section']");
 
@@ -256,34 +257,66 @@ export function getConfigSerializer(format) {
   }
 }
 
-/**
- * Insert data from the main and article configs into the DOM
- */
-function populatePageFromConfigs(pageDom, file) {
-  const { main, article } = configs;
-
-  const parseMain = getConfigLoader(main.format);
-  const parseArticle = getConfigLoader(article.format);
-
-  const mainConfigPath = path.join(sourceDir, `${main.name}.${main.format}`);
-  const articleConfigPath = path.join(articlesDir, `${file}`);
-
-  const mainConfig = fs.readFileSync(mainConfigPath, "utf-8");
-  const articleConfig = fs.readFileSync(articleConfigPath, "utf-8");
-
-  const mainParsed = parseMain(mainConfig);
-  const articleParsed = parseArticle(articleConfig);
-
+export function populatePageFromConfigsOld(pageDom, configs, article) {
   const page = pageDom.window.document.documentElement;
   let pageHTML = page.innerHTML;
 
-  for (let [key, value] of Object.entries(mainParsed)) {
-    pageHTML = pageHTML.replaceAll(`{{${key}}}`, value);
+  for (let key in configs) {
+    const config = configs[key];
+    let configPath;
+    if (config.dir === configs.article.dir) {
+      if (!article) continue;
+
+      configPath = path.join(articlesDir, `${article}`);
+    } else {
+      configPath = path.join(config.dir, `${config.name}.${config.format}`);
+    }
+    const configFile = fs.readFileSync(configPath, "utf-8");
+    const parse = getConfigLoader(config.format);
+    const parsed = parse(configFile);
+    for (let key in parsed) {
+      let value = parsed[key];
+      if (!value) continue;
+
+      value = value instanceof Date ? value.toISOString() : value;
+      pageHTML = pageHTML.replaceAll(`{{${key}}}`, value);
+    }
   }
 
-  for (let [key, value] of Object.entries(articleParsed)) {
+  page.innerHTML = pageHTML;
+}
+
+/**
+ * Insert data from config into HTML
+ */
+function insertConfigDataIntoHTML(html, configPath, format) {
+  const configFile = fs.readFileSync(configPath, "utf-8");
+  const parse = getConfigLoader(format);
+  const parsed = parse(configFile);
+  for (let key in parsed) {
+    let value = parsed[key];
+    if (!value) continue;
+
     value = value instanceof Date ? value.toISOString() : value;
-    pageHTML = pageHTML.replaceAll(`{{${key}}}`, value);
+    html = html.replaceAll(`{{${key}}}`, value);
+  }
+
+  return html;
+}
+
+/**
+ * Insert data from all specified configs into the HTML
+ */
+export async function populatePageFromConfigDirs(pageDom, configs) {
+  const page = pageDom.window.document.documentElement;
+  let pageHTML = page.innerHTML;
+
+  for (const { dir, format } of configs) {
+    const files = getFiles(dir, format);
+    files.forEach((file) => {
+      let configPath = path.join(dir, `${file}`);
+      pageHTML = insertConfigDataIntoHTML(pageHTML, configPath, format);
+    });
   }
 
   page.innerHTML = pageHTML;
@@ -300,7 +333,7 @@ async function updateFileSidebars(sidebarDom) {
       fs.statSync(filePath).isFile() &&
       filePath.endsWith(`.${fileFormats.html}`)
     ) {
-      const fileDom = await JSDOM.fromFile(filePath);
+      const fileDom = await getFileDom(filePath);
       const fileSidebar = query(fileDom, templates.sidebar.selector);
       if (!fileSidebar) continue;
 
@@ -317,7 +350,18 @@ async function updateFileSidebars(sidebarDom) {
  */
 function createArticle(pageDom, destDir, fileData, isPreferred) {
   const { file, uuid } = fileData;
-  populatePageFromConfigs(pageDom, file);
+  // populatePageFromConfigDirs(pageDom, [
+  //   { dir: directories.configsDir, format: configs.main.format },
+  //   // { dir: articlesDir, format: configs.article.format },
+  // ]);
+  const page = pageDom.window.document.documentElement;
+  const filePath = path.join(articlesDir, file);
+  const updatedHTML = insertConfigDataIntoHTML(
+    page.innerHTML,
+    filePath,
+    configs.article.format,
+  );
+  page.innerHTML = updatedHTML;
 
   const newName = `${String(uuid)}.${fileFormats.html}`;
   const destPath = path.join(destDir, newName);
@@ -334,6 +378,22 @@ function createArticle(pageDom, destDir, fileData, isPreferred) {
   return newName;
 }
 
+export async function getFileDom(filePath) {
+  return JSDOM.fromFile(filePath);
+}
+
+export async function populateHTMLFromConfigs(targetDir) {
+  const files = getFiles(targetDir, fileFormats.html);
+  for (let file of files) {
+    const filePath = path.join(targetDir, file);
+    const dom = await getFileDom(filePath, file);
+    populatePageFromConfigDirs(dom, [
+      { dir: configs.main.dir, format: configs.main.format },
+    ]);
+    fs.writeFileSync(filePath, dom.serialize(), `utf8`);
+  }
+}
+
 /**
  * Builds the site from the article and other configs, and the contents of the site/ directory
  */
@@ -345,11 +405,10 @@ export async function generateSite(destDir, preferredPost) {
     : articleFiles[0].file;
 
   const sidebarPath = path.join(
-    sourceDir,
     templatesDir,
     `${templates.sidebar.name}.${fileFormats.html}`,
   );
-  const sidebarDom = await JSDOM.fromFile(sidebarPath);
+  const sidebarDom = await getFileDom(sidebarPath);
 
   for (const fileData of articleFiles) {
     const { file } = fileData;
@@ -375,7 +434,15 @@ export async function generateSite(destDir, preferredPost) {
   // Since the sidebar is updated in reverse order,
   // the order needs to be reversed before being added
   reverseElements(sidebarDom, "[data-find='side-bar-link-sections']");
+  log(GRAY, "Adding updated side bar to articles", CLEAR);
   await updateFileSidebars(sidebarDom);
+
+  log(GRAY, "Creating deployable build", CLEAR);
+  copyDir(siteDir, buildDir, { minify: true });
+
+  // Update all HTML copied to the build/ directory with config data
+  log(GRAY, "Updating build HTML files with data", CLEAR);
+  await populateHTMLFromConfigs(buildDir);
 
   log("\n");
 }

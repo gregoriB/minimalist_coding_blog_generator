@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
-    <!-- TEMPLATE SECTION           -->
-    <!-- UPDATE TITLE TO MATCH BLOG -->
-
-    <title>gregori.dev</title>
+    <title> {{SITE_TITLE}} </title>
     <link rel="shortcut icon" type="image/jpg" href="assets/images/favicon.png"/>
 
     <link rel="stylesheet" href="styles/variables.css" />
@@ -60,7 +57,7 @@
 
         <section data-find="main-content-heading" id="article-heading">
             <h2 data-find="main-content-title" id="article-heading-title">
-                About Me
+                {{ABOUT_ME_TITLE}}
             </h2>
         </section>
 
@@ -87,31 +84,26 @@
       </article>
     </main>
   <footer data-find="footer" class="site-footer" id="about-footer">
-      <section id="footer-social-links">
-
-      <!-- TEMPLATE SECTION                                          -->
-      <!-- BLOGGER SOCIAL LINKS ARE HERE                             -->
-      <!-- REMOVE THE PLACEHOLDER DATA AND REPLACE IT WITH REAL DATA -->
-
-      <a href="https://github.com/gregoriB/minimalist_coding_blog_site_generator">
-          <div title="Github" id="social-github-logo"></div>
-      </a>
-      <a href="http://google.com">
-          <div title="Gitlab" id="social-gitlab-logo"></div>
-      </a>
-      <a href="mailto:webmaster@example.com">
-          <div title="Email" id="social-email-logo"></div>
-      </a>
-      <a href="http://google.com">
-          <div title="X" id="social-x-logo"></div>
-      </a>
-      <a href="http://google.com">
-          <div title="Buy Me a Coffee" id="social-bmc-logo"></div>
-      </a>
-      <a href="http://google.com">
-          <div title="Patreon" id="social-patreon-logo"></div>
-      </a>
-      </section>
+    <section id="footer-social-links">
+        <a href="{{SOCIAL_URL_GITHUB}}">
+            <div title="Github" id="social-github-logo"></div>
+        </a>
+        <a href="{{SOCIAL_URL_GITLAB}}">
+            <div title="Gitlab" id="social-gitlab-logo"></div>
+        </a>
+        <a href="mailto:{{SOCIAL_URL_EMAIL}}">
+            <div title="Email" id="social-email-logo"></div>
+        </a>
+        <a href="{{SOCIAL_URL_X}}">
+            <div title="X" id="social-x-logo"></div>
+        </a>
+        <a href="{{SOCIAL_URL_BMC}}">
+            <div title="Buy Me a Coffee" id="social-bmc-logo"></div>
+        </a>
+        <a href="{{SOCIAL_URL_PATREON}}">
+            <div title="Patreon" id="social-patreon-logo"></div>
+        </a>
+    </section>
   </footer>
   </body>
 </html>

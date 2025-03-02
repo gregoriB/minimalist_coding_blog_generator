@@ -1,6 +1,6 @@
 import fs from "fs";
 import { colors, configs, directories } from "./variables.mjs";
-import { copyDir, generateSite, log } from "./helpers.mjs";
+import { generateSite, log } from "./helpers.mjs";
 
 const { GRAY, RED, CYAN, GREEN, BLUE, ORANGE, MAGENTA, CLEAR } = colors;
 const { articlesDir, sourceDir, siteDir, buildDir } = directories;
@@ -41,11 +41,9 @@ function verifyPreferred(preferred) {
 function makeBuildDir() {
   fs.rmSync(buildDir, { force: true, recursive: true });
   fs.mkdirSync(buildDir, { recursive: true });
-
-  log(GRAY, "Creating deployable build", CLEAR);
-
-  copyDir(sourceDir + siteDir, buildDir, { minify: true });
 }
+
+function copySiteDirToBuildDir() {}
 
 /**
  * Create deployable build Dir
@@ -57,6 +55,7 @@ export default async function createBuild(preferredPost) {
     verifyPreferred(preferredPost);
     verifyArticlesDir();
     makeBuildDir();
+    copySiteDirToBuildDir();
     await generateSite(buildDir, preferredPost);
 
     log(GREEN, "Build complete!", CLEAR, "\n");

@@ -19,10 +19,11 @@ export const fileFormats = {
 export const directories = {
   backupsDir: "backups/",
   sourceDir: "src/",
-  siteDir: "site/",
+  siteDir: "src/site/",
   buildDir: "build/",
   articlesDir: "articles/",
-  templatesDir: "templates/",
+  templatesDir: "src/templates/",
+  configsDir: "src/configs/",
 };
 
 export const templates = {
@@ -53,8 +54,14 @@ export const templates = {
 };
 
 export const configs = {
-  main: { name: "config", format: fileFormats.yaml },
-  article: { name: "article", format: fileFormats.yaml },
+  main: {
+    format: fileFormats.yaml,
+    dir: directories.configsDir,
+  },
+  article: {
+    format: fileFormats.yaml,
+    dir: directories.articlesDir,
+  },
 };
 
 export const commands = {
