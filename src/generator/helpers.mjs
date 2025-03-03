@@ -369,10 +369,6 @@ async function updateFileSidebars(sidebarDom) {
  */
 function createArticle(pageDom, destDir, fileData, isPreferred) {
   const { file, uuid } = fileData;
-  // populatePageFromConfigDirs(pageDom, [
-  //   { dir: directories.configsDir, format: configs.main.format },
-  //   // { dir: articlesDir, format: configs.article.format },
-  // ]);
   const page = pageDom.window.document.documentElement;
   const filePath = path.join(articlesDir, file);
   const updatedHTML = insertConfigDataIntoHTML(

@@ -56,7 +56,7 @@
   text-decoration: none;
   color: rgb(var(--primary-color));
   font-weight: bold;
-  letter-spacing: 1px;
+  letter-spacing: 0.06rem;
 }
 
 @media (max-width: 700px) {
@@ -73,11 +73,14 @@
   font-weight: 400;
   padding: 4rem;
   padding-top: 2rem;
-  text-align: justify;
+  text-align: left;
 }
 
 #article-body p {
-  margin: 4rem auto;
+  letter-spacing: 0.03rem;
+  line-height: 1.8rem;
+  margin: 2.5rem auto;
+  margin-bottom: 0;
   font-size: 1.1rem;
 }
 
@@ -85,12 +88,21 @@
   margin-top: 0;
 }
 
+#article-body pre:has(code) {
+  margin-left: 1rem;
+  margin-top: 4rem;
+  width: 90%;
+}
+
 #article-body pre code {
-  width: 85%;
   border-radius: 10px;
-  padding: 2rem;
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+  padding-left: 1.6rem;
+  padding-right: 1rem;
   font-size: 0.8rem;
-  margin: 0 auto;
+  letter-spacing: 0rem;
+  line-height: 1.2rem;
 }
 
 @media (max-width: 800px) {
