@@ -156,12 +156,22 @@ export async function addHTMLFromTemplate(dom, templateData) {
 
   const tmplDom = await getFileDom(filePath);
 
-  let main = query(dom, templates.main.selector);
-  let tmpl = query(tmplDom, templateData.selector);
-  main.innerHTML = main.innerHTML.replaceAll(
-    templateData.marker,
-    tmpl.outerHTML,
-  );
+  const tmpl = query(tmplDom, templateData.selector);
+  let tmplHTML = tmpl.outerHTML;
+  if (templateData.name === templates.head.name) {
+    // Have to do some hackiness because JSDOM seems to move invalid
+    // HTML into the body of the document, which includes the template
+    // markers.  So instead the head HTML is manually replaced
+    // by the template HTML, and then the set to an empty string to
+    // remove the template marker from the body
+    let mainHTML = dom.window.document.head.outerHTML;
+    mainHTML = mainHTML.replaceAll("<head></head>", tmplHTML);
+    dom.window.document.head.outerHTML = mainHTML;
+    tmplHTML = "";
+  }
+
+  const main = query(dom, templates.main.selector);
+  main.innerHTML = main.innerHTML.replaceAll(templateData.marker, tmplHTML);
 }
 
 export async function addHTMLFromTemplates(pageDom) {

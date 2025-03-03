@@ -19,18 +19,18 @@
   margin-top: 4rem;
 }
 
-.side-bar .articles-by-date ul {
+.side-bar ul {
   padding: 0;
 }
 
-.side-bar .articles-by-date ul li {
+.side-bar ul li {
   margin: 1rem;
   padding: 0;
   text-align: center;
   list-style-type: none;
 }
 
-.side-bar .articles-by-date ul li a {
+.side-bar ul li a {
   text-decoration: none;
   color: rgb(var(--primary-color));
   font-weight: bold;

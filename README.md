@@ -40,6 +40,7 @@ $ npm run generate build "My First Blog Post"
 - All non-article configs go in the `src/configs/` directory
   * Markers in the HTML which match any config entries will be replaced with that data. <br>
   eg: if `{{SITE_TITLE}}` exists in an HTML file and matches a config key `SITE_TITLE`, that data is inserted in its place
+  * These HTML files can also utilize templates if the template is registered in `src/generator/variables.mjs`, so things like the site header and footer can be reused everywhere.
 - The `new` command script creates a new article yaml file from `src/template/article.yaml`
   * If a name is not specified, a unique name using the current date will be used
   * If a name is specified, then the article heading property in the generated article config will be auto-filled with it.

@@ -12,9 +12,18 @@
         <h2>Check Out this Featured Article</h2>
           <!-- This iframe will always display the most recent article -->
           <!-- Best to leave it be unless you have reason to change it -->
-          <a href="index.html" id="iframe-link">
+          <a href="index.html" id="iframe-link" class="js-only">
             <iframe class="embedded-content" scrolling="no" src="index.html" sandbox="allow-same-origin allow-scripts"></iframe>
           </a>
+          <noscript>
+            <ul data-find="side-bar-section-list">
+                <li data-find="side-bar-section-item">
+                    <a href="index.html" data-find="side-bar-section-link">
+                        Featured Article
+                    </a>
+                </li>
+            </ul>
+          </noscript>
       </nav>
 
       <article data-find="main-content" class="content" id="about-content">
