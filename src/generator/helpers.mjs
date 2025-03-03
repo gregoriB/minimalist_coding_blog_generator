@@ -313,8 +313,7 @@ function insertConfigDataIntoHTML(html, configPath, format) {
   const parse = getConfigLoader(format);
   const parsed = parse(configFile);
   for (let key in parsed) {
-    let value = parsed[key];
-    if (!value) continue;
+    let value = parsed[key] || "";
 
     value = value instanceof Date ? value.toISOString() : value;
     html = html.replaceAll(`{{${key}}}`, value);
