@@ -1,4 +1,4 @@
-[![Netlify Status](https://api.netlify.com/api/v1/badges/8006df7f-06b3-4949-8d3e-1f2e6b02b1dd/deploy-status)](https://app.netlify.com/sites/gregoridev/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/8006df7f-06b3-4949-8d3e-1f2e6b02b1dd/deploy-status)](https://app.netlify.com/sites/minimalist-blog-site/deploys)
 
 [Demo site][demo_url]
 
@@ -67,4 +67,4 @@ Also please remember to run the prettier script before submitting a pull request
 
 
 [//]: #
-[demo_url]: https://gregoridev.netlify.app/
+[demo_url]: https://minimalist-blog-site.netlify.app/
