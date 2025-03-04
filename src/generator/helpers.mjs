@@ -174,18 +174,20 @@ export async function addHTMLFromTemplate(dom, templateData) {
   main.innerHTML = main.innerHTML.replaceAll(templateData.marker, tmplHTML);
 }
 
-export async function addHTMLFromTemplates(pageDom) {
+export async function addHTMLFromTemplates(pageDom, skipTemplates) {
   for (let tmpl in templates) {
+    if (skipTemplates && skipTemplates.includes(templates[tmpl].name)) continue;
+
     await addHTMLFromTemplate(pageDom, templates[tmpl]);
   }
 }
 
-export async function buildPageFromTemplates() {
+export async function buildPageFromTemplates(skipTemplates) {
   const main = templates.main;
   let headPath = `${templatesDir}${main.name}.${fileFormats.html}`;
 
   let pageDom = await getFileDom(headPath);
-  await addHTMLFromTemplates(pageDom);
+  await addHTMLFromTemplates(pageDom, skipTemplates);
 
   return pageDom;
 }
@@ -340,10 +342,7 @@ export async function populatePageFromConfigDirs(pageDom, configs) {
   page.innerHTML = pageHTML;
 }
 
-/**
- * Replaces the existing sidebar in the article html files with a new sidebar
- */
-async function updateFileSidebars(sidebarDom) {
+async function addSidebarToFiles(sidebarDom) {
   const builtBlogFiles = fs.readdirSync(buildDir);
   for (const file of builtBlogFiles) {
     const filePath = path.join(buildDir, file);
@@ -351,12 +350,16 @@ async function updateFileSidebars(sidebarDom) {
       fs.statSync(filePath).isFile() &&
       filePath.endsWith(`.${fileFormats.html}`)
     ) {
-      const fileDom = await getFileDom(filePath);
-      const fileSidebar = query(fileDom, templates.sidebar.selector);
-      if (!fileSidebar) continue;
-
       const newSidebar = query(sidebarDom, templates.sidebar.selector);
-      fileSidebar.outerHTML = newSidebar.outerHTML;
+      const fileDom = await getFileDom(filePath);
+      const fileBody = fileDom.window.document.body;
+      const fileDomHTML = fileBody.outerHTML;
+
+      fileBody.outerHTML = fileDomHTML.replaceAll(
+        templates.sidebar.marker,
+        newSidebar.outerHTML,
+      );
+
       fs.writeFileSync(filePath, fileDom.serialize(), `utf8`);
     }
   }
@@ -401,7 +404,7 @@ export async function populateHTMLFromConfigs(targetDir) {
   for (let file of files) {
     const filePath = path.join(targetDir, file);
     const dom = await getFileDom(filePath, file);
-    await addHTMLFromTemplates(dom);
+    await addHTMLFromTemplates(dom, [templates.sidebar.name]);
     populatePageFromConfigDirs(dom, [
       { dir: configs.main.dir, format: configs.main.format },
     ]);
@@ -433,7 +436,7 @@ export async function generateSite(destDir, preferredPost) {
       fs.statSync(articlePath).isFile() &&
       articlePath.endsWith(`.${article.format}`)
     ) {
-      const pageDom = await buildPageFromTemplates();
+      const pageDom = await buildPageFromTemplates([templates.sidebar.name]);
       const isPreferred = file === preferred;
       const articleBuiltName = createArticle(
         pageDom,
@@ -446,14 +449,14 @@ export async function generateSite(destDir, preferredPost) {
     }
   }
 
+  log(GRAY, "Creating deployable build", CLEAR);
+  copyDir(siteDir, buildDir, { minify: true });
+
   // Since the sidebar is updated in reverse order,
   // the order needs to be reversed before being added
   reverseElements(sidebarDom, "[data-find='side-bar-link-sections']");
-  log(GRAY, "Adding updated side bar to articles", CLEAR);
-  await updateFileSidebars(sidebarDom);
-
-  log(GRAY, "Creating deployable build", CLEAR);
-  copyDir(siteDir, buildDir, { minify: true });
+  log(GRAY, "Adding updated side bar", CLEAR);
+  await addSidebarToFiles(sidebarDom);
 
   // Update all HTML copied to the build/ directory with config data
   log(GRAY, "Updating build HTML files with data", CLEAR);

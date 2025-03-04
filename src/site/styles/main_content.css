@@ -59,21 +59,12 @@
   letter-spacing: 0.06rem;
 }
 
-@media (max-width: 700px) {
-  #article-heading-author {
-    margin-left: 0;
-  }
-
-  #article-heading-author a {
-    margin-left: 0;
-  }
-}
-
 #article-body {
   font-weight: 400;
   padding: 4rem;
   padding-top: 2rem;
   text-align: left;
+  font-size: 1.1rem;
 }
 
 #article-body p {
@@ -81,7 +72,6 @@
   line-height: 1.8rem;
   margin: 2.5rem auto;
   margin-bottom: 0;
-  font-size: 1.1rem;
 }
 
 #article-body p:first-of-type {
@@ -106,12 +96,8 @@
 }
 
 @media (max-width: 800px) {
-  #article-heading-author {
-    margin-left: 0;
-  }
-
-  #article-heading-author a {
-    margin-left: 0;
+  .content {
+    width: 90%;
   }
 }
 

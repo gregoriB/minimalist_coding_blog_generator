@@ -7,8 +7,9 @@
 
     {{SITE_BANNER}}
 
-    <main class="content-container" class="main-content" id="about-main-content">
-      <nav class="side-bar" id="about-side-bar" data-find="about-side-bar">
+    <main class="content-container" data-find="about-content">
+
+      <nav class="side-bar" id="about-side-bar" data-find="about-side-bar" tabindex="0">
         <h2>Check Out this Featured Article</h2>
           <!-- This iframe will always display the most recent article -->
           <!-- Best to leave it be unless you have reason to change it -->
@@ -26,7 +27,7 @@
           </noscript>
       </nav>
 
-      <article data-find="main-content" class="content" id="about-content">
+      <article data-find="main-content" class="content">
 
         <section data-find="main-content-heading" id="article-heading">
             <h2 data-find="main-content-title" id="article-heading-title">

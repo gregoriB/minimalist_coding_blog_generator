@@ -15,9 +15,7 @@ function isInsideIframe() {
 function selectivelyHideInIframe() {
   if (!isInsideIframe()) return;
 
-  document.querySelectorAll(".hide-in-iframe").forEach((el) => {
-    el.style.display = "none";
-  });
+  document.body.classList.add("in-iframe");
 }
 
 selectivelyHideInIframe();

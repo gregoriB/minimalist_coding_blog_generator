@@ -57,6 +57,8 @@
   --logo-social-email: url("../assets/images/social/email_logo_light.svg");
 
   --logo-social-bmc-text: url("../assets/images/social/buy_me_a_coffee_logo_text_light.svg");
+
+  --mobile-width: 800px;
 }
 
 [data-theme="light"] {
