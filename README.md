@@ -48,7 +48,12 @@ $ npm run generate build "My First Blog Post"
   * Backups are first created for all articles
   * The required directories are copied into the build/ directory
   * All of the blog articles are built in the build/ directory, including an `index.html` file for the featured article (to act as a website entry point)
-  * Non-minified CSS and JS files are minified
+  * ALL CSS and JS files are minified
+
+## Notes
+
+- A hand-picked version of HightlightJS is used for code syntax highlighting. It only includes the most common languages to reduce the bundle size.
+  * If you need more language support, then a custom version of the library can be download from [their website][highlightjs_url] and placed into the the `src/site/deps/highlight/` directory
 
 ## Deployment
 
@@ -68,3 +73,4 @@ Also please remember to run the prettier script before submitting a pull request
 
 [//]: #
 [demo_url]: https://minimalist-blog-site.netlify.app/
+[highlightjs_url]: https://highlightjs.org/download/

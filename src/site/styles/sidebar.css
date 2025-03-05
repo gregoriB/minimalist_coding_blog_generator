@@ -1,6 +1,5 @@
 .side-bar {
   width: 16vw;
-  height: 100%;
   background-color: rgb(var(--bg-color));
   transition: 100ms;
   z-index: 10000;

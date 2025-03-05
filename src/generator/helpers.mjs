@@ -24,13 +24,13 @@ export function log(...args) {
 }
 
 function canMinifyJS(file) {
-  if (file.endsWith(".js") && !file.endsWith(".min.js")) return true;
+  if (file.endsWith(".js")) return true;
 
   return false;
 }
 
 function canMinifyCSS(file) {
-  if (file.endsWith(".css") && !file.endsWith(".min.css")) return true;
+  if (file.endsWith(".css")) return true;
 
   return false;
 }
