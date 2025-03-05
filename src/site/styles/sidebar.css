@@ -101,4 +101,12 @@
   #iframe-link {
     height: 50rem;
   }
+
+  .side-bar:not(:focus) #iframe-link {
+    pointer-events: none;
+  }
+
+  .side-bar #iframe-link:active {
+      pointer-events: unset;
+  }
 }

@@ -1,14 +1,11 @@
 .content {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
   background-color: rgb(var(--bg-color));
   width: 100%;
   height: 100%;
   padding: 1.5rem 2rem;
   margin-right: 2rem;
   margin-left: 4rem;
+  max-width: 1000px;
 }
 
 #article-heading {
@@ -61,7 +58,6 @@
 
 #article-body {
   font-weight: 400;
-  padding: 4rem;
   padding-top: 2rem;
   text-align: left;
   font-size: 1.1rem;
@@ -97,14 +93,35 @@
 
 @media (max-width: 800px) {
   .content {
+    width: 85%;
+  }
+
+  #article-body {
+      font-size: 1.5rem;
+  }
+
+  #article-body p {
+      line-height: 2rem;
+  }
+
+ #article-body pre code {
+     padding-left: 1rem;
+     font-size: 1rem;
+     line-height: 1.4rem;
+ }
+
+  #article-body pre:has(code) {
+    margin-left: 1rem;
+    margin-top: 4rem;
     width: 90%;
+    margin-left: 0;
+    width: 100%;
   }
 }
 
 @media (max-width: 1400px) {
   .content {
-    padding-left: 0;
-    padding-right: 0;
+    padding-right: 1rem;
     margin-left: 0;
     margin-right: 0;
   }
