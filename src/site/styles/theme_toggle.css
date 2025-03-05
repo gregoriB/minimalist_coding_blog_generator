@@ -14,7 +14,7 @@
 }
 .theme-switch {
   display: inline-block;
-  height: 34px;
+  height: 1.75rem;
   position: relative;
   width: 60px;
 }
@@ -38,7 +38,7 @@
   background-color: #fff;
   bottom: 4px;
   content: "";
-  height: 26px;
+  height: 1.25rem;
   left: 4px;
   position: absolute;
   transition: 0.4s;
@@ -46,7 +46,7 @@
 }
 
 input:checked + .slider {
-  background-color: rgb(var(--primary-color));
+  background-color: rgba(var(--primary-color), 0.7);
 }
 
 input:checked + .slider:before {
@@ -54,11 +54,11 @@ input:checked + .slider:before {
 }
 
 .slider.round {
-  border-radius: 34px;
+  border-radius: 10px;
 }
 
 .slider.round:before {
-  border-radius: 50%;
+  border-radius: 7px;
 }
 
 @media (max-width: 800px) {
