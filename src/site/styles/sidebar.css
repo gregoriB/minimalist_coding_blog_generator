@@ -107,6 +107,6 @@
   }
 
   .side-bar #iframe-link:active {
-      pointer-events: unset;
+    pointer-events: unset;
   }
 }
