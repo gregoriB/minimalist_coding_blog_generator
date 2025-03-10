@@ -25,7 +25,6 @@ function createArticle(fileName = "") {
   }
 
   const filePath = path.join(
-    sourceDir,
     templatesDir,
     `${article.name}.${format}`,
   );
