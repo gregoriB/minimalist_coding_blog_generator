@@ -24,10 +24,7 @@ function createArticle(fileName = "") {
     fs.mkdirSync(articlesDir);
   }
 
-  const filePath = path.join(
-    templatesDir,
-    `${article.name}.${format}`,
-  );
+  const filePath = path.join(templatesDir, `${article.name}.${format}`);
   const newArticlePath = path.join(articlesDir, `${newFileName}.${format}`);
   const data = fs.readFileSync(filePath, "utf-8");
   const parsed = parseFile(data);
