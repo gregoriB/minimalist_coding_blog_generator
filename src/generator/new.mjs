@@ -26,6 +26,13 @@ function createArticle(fileName = "") {
 
   const filePath = path.join(templatesDir, `${article.name}.${format}`);
   const newArticlePath = path.join(articlesDir, `${newFileName}.${format}`);
+
+  if (fs.existsSync(newArticlePath)) {
+    throw new Error(
+      `Article "${newFileName}" already exists!  Cannot create file`,
+    );
+  }
+
   const data = fs.readFileSync(filePath, "utf-8");
   const parsed = parseFile(data);
 
