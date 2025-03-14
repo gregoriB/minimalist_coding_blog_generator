@@ -62,24 +62,15 @@ function getFileDataByDate(dir, fileExtension) {
     .filter((file) => file.endsWith(fileExtension))
     .map((file) => {
       const filePath = path.join(dir, file);
-      const stats = fs.statSync(filePath);
       const data = fs.readFileSync(filePath, "utf-8");
 
       const parser = getConfigLoader(fileExtension);
       const parsed = parser(data);
-      let uuid = String(stats.birthtimeMs);
-      if (parsed.DATE_TIME instanceof Date) {
-        uuid += parsed.DATE_TIME.toISOString();
-      } else {
-        uuid += parsed.DATE_TIME;
-      }
-      uuid = replaceSpecialChars(uuid, "_");
       const date = new Date(parsed.DATE_TIME);
       const month = date.getMonth();
 
       return {
         file,
-        uuid,
         datetime: parsed.DATE_TIME,
         day: date.getDate(),
         month: { name: months[month], index: month },
@@ -87,12 +78,6 @@ function getFileDataByDate(dir, fileExtension) {
       };
     })
     .sort((a, b) => new Date(b.datetime) - new Date(a.datetime));
-}
-
-function replaceSpecialChars(str, char = "") {
-  if (!str) return "";
-
-  return str.replace(/[^a-zA-Z0-9]/g, char);
 }
 
 /**
@@ -369,8 +354,7 @@ async function addSidebarToFiles(sidebarDom) {
  * Populates the DOM for the article page and writes it to a new HTML file.
  * If the article is the preferred article, it is also copied into an index.html file
  */
-function createArticle(pageDom, destDir, fileData, isPreferred) {
-  const { file, uuid } = fileData;
+function createArticle(pageDom, destDir, file, isPreferred) {
   const page = pageDom.window.document.documentElement;
   const filePath = path.join(articlesDir, file);
   const updatedHTML = insertConfigDataIntoHTML(
@@ -380,7 +364,7 @@ function createArticle(pageDom, destDir, fileData, isPreferred) {
   );
   page.innerHTML = updatedHTML;
 
-  const newName = `${String(uuid)}.${fileFormats.html}`;
+  const newName = `${file.split(".")[0]}.${fileFormats.html}`;
   const destPath = path.join(destDir, newName);
 
   fs.writeFileSync(destPath, pageDom.serialize(), `utf8`);
@@ -441,7 +425,7 @@ export async function generateSite(destDir, preferredPost) {
       const articleBuiltName = createArticle(
         pageDom,
         destDir,
-        fileData,
+        file,
         isPreferred,
       );
 
