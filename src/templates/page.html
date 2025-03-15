@@ -5,17 +5,25 @@
 
   <body>
 
+      <header data-find="banner" class="site-banner hide-in-iframe">
       {{TEMPLATE_BANNER}}
+      </header>
 
       <main class="content-container" data-find="blog-content">
 
-          {{TEMPLATE_SIDEBAR}}
+          <nav class="side-bar hide-in-iframe" data-find="sidebar" tabindex="0">
+            {{TEMPLATE_SIDEBAR}}
+          </nav>
 
-          {{TEMPLATE_ARTICLE}}
+          <article data-find="article" class="content">
+            {{TEMPLATE_ARTICLE}}
+          </article>
 
       </main>
 
-      {{TEMPLATE_FOOTER}}
+      <footer data-find="footer" class="site-footer" id="article-footer">
+        {{TEMPLATE_FOOTER}}
+      </footer>
 
   </body>
 </html>

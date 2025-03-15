@@ -5,7 +5,9 @@
 
   <body>
 
-    {{TEMPLATE_BANNER}}
+    <header data-find="banner" class="site-banner hide-in-iframe">
+        {{TEMPLATE_BANNER}}
+    </header>
 
     <main class="content-container" data-find="about-content">
 
@@ -41,7 +43,9 @@
       </article>
     </main>
 
-  {{TEMPLATE_FOOTER}}
+    <footer data-find="footer" class="site-footer" id="article-footer">
+        {{TEMPLATE_FOOTER}}
+    </footer>
 
   </body>
 </html>

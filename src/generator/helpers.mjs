@@ -141,16 +141,17 @@ export async function addHTMLFromTemplate(dom, templateData) {
 
   const tmplDom = await getFileDom(filePath);
 
-  const tmpl = query(tmplDom, templateData.selector);
-  let tmplHTML = tmpl.outerHTML;
+  const tmplBody = query(tmplDom, "body");
+  let tmplHTML = tmplBody.innerHTML;
   if (templateData.name === templates.head.name) {
+    const tmplHead = query(tmplDom, "head");
     // Have to do some hackiness because JSDOM seems to move invalid
     // HTML into the body of the document, which includes the template
     // markers.  So instead the head HTML is manually replaced
     // by the template HTML, and then the set to an empty string to
     // remove the template marker from the body
     let mainHTML = dom.window.document.head.outerHTML;
-    mainHTML = mainHTML.replaceAll("<head></head>", tmplHTML);
+    mainHTML = mainHTML.replaceAll("<head></head>", tmplHead.outerHTML);
     dom.window.document.head.outerHTML = mainHTML;
     tmplHTML = "";
   }
@@ -335,14 +336,14 @@ async function addSidebarToFiles(sidebarDom) {
       fs.statSync(filePath).isFile() &&
       filePath.endsWith(`.${fileFormats.html}`)
     ) {
-      const newSidebar = query(sidebarDom, templates.sidebar.selector);
+      const newSidebarBody = query(sidebarDom, "body");
       const fileDom = await getFileDom(filePath);
       const fileBody = fileDom.window.document.body;
       const fileDomHTML = fileBody.outerHTML;
 
       fileBody.outerHTML = fileDomHTML.replaceAll(
         templates.sidebar.marker,
-        newSidebar.outerHTML,
+        newSidebarBody.innerHTML,
       );
 
       fs.writeFileSync(filePath, fileDom.serialize(), `utf8`);
