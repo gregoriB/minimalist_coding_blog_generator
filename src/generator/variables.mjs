@@ -63,10 +63,6 @@ export const configs = {
     format: fileFormats.yaml,
     dir: directories.configsDir,
   },
-  article: {
-    format: fileFormats.yaml,
-    dir: directories.articlesDir,
-  },
 };
 
 export const commands = {

@@ -10,11 +10,11 @@ import {
 } from "./helpers.mjs";
 
 const { GRAY, RED, CYAN, GREEN, BLUE, ORANGE, CLEAR } = colors;
-const { articlesDir, sourceDir, templatesDir } = directories;
+const { articlesDir, configsDir, sourceDir, templatesDir } = directories;
 
 function createArticle(fileName = "") {
-  const article = templates.article;
-  const { format } = configs.article;
+  const template = templates.article;
+  const { format } = configs.article || configs.main;
   const parseFile = getConfigLoader(format);
   const serialize = getConfigSerializer(format);
 
@@ -24,7 +24,7 @@ function createArticle(fileName = "") {
     fs.mkdirSync(articlesDir);
   }
 
-  const filePath = path.join(templatesDir, `${article.name}.${format}`);
+  const filePath = path.join(configsDir, `${template.name}.${format}`);
   const newArticlePath = path.join(articlesDir, `${newFileName}.${format}`);
 
   if (fs.existsSync(newArticlePath)) {
