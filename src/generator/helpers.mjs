@@ -156,7 +156,7 @@ export async function addHTMLFromTemplate(dom, templateData) {
     tmplHTML = "";
   }
 
-  const main = query(dom, templates.page.selector);
+  const main = query(dom, "html");
   main.innerHTML = main.innerHTML.replaceAll(templateData.marker, tmplHTML);
 }
 

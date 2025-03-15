@@ -71,7 +71,6 @@ function getFiles(dir, fileExtension) {
 function createTemplateConfig(file) {
   return {
     name: file,
-    selector: file === "page" ? "html" : `[data-find='${file}']`,
     marker: `{{TEMPLATE_${file.toUpperCase()}}}`,
   };
 }
