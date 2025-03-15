@@ -16,6 +16,29 @@ import {
 const { GRAY, RED, CYAN, GREEN, BLUE, ORANGE, MAGENTA, CLEAR } = colors;
 const { articlesDir, siteDir, buildDir, templatesDir } = directories;
 
+export function getFiles(dir, fileExtension) {
+  return fs.readdirSync(dir).filter((file) => file.endsWith(fileExtension));
+}
+
+function createTemplateConfig(file) {
+  return {
+    name: file,
+    selector: `[data-find='${file}']`,
+    marker: `{{TEMPLATE_${file.toUpperCase()}}}`,
+  };
+}
+
+export function generateTemplateConfigs() {
+  const configs = {};
+  const templateFiles = getFiles(templatesDir, "html");
+  for (const file of templateFiles) {
+    const name = file.split(".")[0];
+    configs[name] = createTemplateConfig(name);
+  }
+
+  return configs;
+}
+
 export function log(...args) {
   let str = "";
   for (let i = 0; i < args.length; i++) str += `${args[i]}`;
@@ -46,10 +69,6 @@ function getMinified(filePath) {
   return canMinifyJS(filePath)
     ? UglifyJS.minify(content).code
     : UglifyCSS.processString(content);
-}
-
-export function getFiles(dir, fileExtension) {
-  return fs.readdirSync(dir).filter((file) => file.endsWith(fileExtension));
 }
 
 /**
@@ -155,7 +174,7 @@ export async function addHTMLFromTemplate(dom, templateData) {
     tmplHTML = "";
   }
 
-  const main = query(dom, templates.main.selector);
+  const main = query(dom, templates.page.selector);
   main.innerHTML = main.innerHTML.replaceAll(templateData.marker, tmplHTML);
 }
 
@@ -168,8 +187,8 @@ export async function addHTMLFromTemplates(pageDom, skipTemplates) {
 }
 
 export async function buildPageFromTemplates(skipTemplates) {
-  const main = templates.main;
-  let headPath = `${templatesDir}${main.name}.${fileFormats.html}`;
+  const page = templates.page;
+  let headPath = `${templatesDir}${page.name}.${fileFormats.html}`;
 
   let pageDom = await getFileDom(headPath);
   await addHTMLFromTemplates(pageDom, skipTemplates);

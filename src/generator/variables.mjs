@@ -1,3 +1,4 @@
+import fs from "fs";
 export const colors = {
   CLEAR: `\x1b[0m`,
   RED: `\x1b[31m`,
@@ -24,38 +25,6 @@ export const directories = {
   articlesDir: "articles/",
   templatesDir: "src/templates/",
   configsDir: "src/configs/",
-};
-
-export const templates = {
-  main: {
-    name: "page",
-    selector: "html",
-  },
-  head: {
-    name: "head",
-    selector: "head",
-    marker: "{{SITE_HEAD}}",
-  },
-  banner: {
-    name: "banner",
-    selector: "[data-find='banner']",
-    marker: "{{SITE_BANNER}}",
-  },
-  sidebar: {
-    name: "sidebar",
-    selector: "[data-find='side-bar']",
-    marker: "{{SIDE_BAR}}",
-  },
-  article: {
-    name: "article",
-    selector: "[data-find='main-content']",
-    marker: "{{ARTICLE}}",
-  },
-  footer: {
-    name: "footer",
-    selector: "[data-find='footer']",
-    marker: "{{SITE_FOOTER}}",
-  },
 };
 
 export const configs = {
@@ -94,3 +63,28 @@ export const months = [
 ];
 
 export const leftPadding = "     ";
+
+function getFiles(dir, fileExtension) {
+  return fs.readdirSync(dir).filter((file) => file.endsWith(fileExtension));
+}
+
+function createTemplateConfig(file) {
+  return {
+    name: file,
+    selector: file === "page" ? "html" : `[data-find='${file}']`,
+    marker: `{{TEMPLATE_${file.toUpperCase()}}}`,
+  };
+}
+
+function generateTemplateConfigs() {
+  const configs = {};
+  const templateFiles = getFiles(directories.templatesDir, "html");
+  for (const file of templateFiles) {
+    const name = file.split(".")[0];
+    configs[name] = createTemplateConfig(name);
+  }
+
+  return configs;
+}
+
+export const templates = generateTemplateConfigs();
