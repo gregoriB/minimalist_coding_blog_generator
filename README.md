@@ -37,11 +37,13 @@ $ npm run generate build "My First Blog Post"
 
 - Articles are in `.yaml` format.  Be sure to use yaml syntax verification!  Running `npm run format` should catch yaml errors, but it will not correct them.
 - All of the content of `src/site/` will be included in the site build
-- All non-article configs go in the `src/configs/` directory
+- All configs go in the `src/configs/` directory
   * Markers in the HTML which match any config entries will be replaced with that data. <br>
   eg: if `{{SITE_TITLE}}` exists in an HTML file and matches a config key `SITE_TITLE`, that data is inserted in its place
-  * These HTML files can also utilize templates if the template is registered in `src/generator/variables.mjs`, so things like the site header and footer can be reused everywhere.
-- The `new` command script creates a new article yaml file from `src/template/article.yaml`
+  * These HTML files can also utilize templates, which are any html file in the `src/template/ directory`, so things like the site header and footer can be reused everywhere.
+  * Template files can be created and used anywhere, but bear in mind that a template file must have a data selector with the file name in it, eg: `data-find="my_template"`
+  * Use templates by adding a template marker in any HTML file(including templates).  For example, the marker for the `my_template.html` would be this: `{{TEMPLATE_MY_TEMPLATE}}`
+- The `new` command script creates a new article yaml file from `src/configs/article.yaml`
   * If a name is not specified, a unique name using the current date will be used
   * If a name is specified, then the article heading property in the generated article config will be auto-filled with it.
 - The `build` command creates a build/ directory and builds the articles
