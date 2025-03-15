@@ -355,12 +355,13 @@ async function addSidebarToFiles(sidebarDom) {
  * If the article is the preferred article, it is also copied into an index.html file
  */
 function createArticle(pageDom, destDir, file, isPreferred) {
+  const config = configs.article || configs.main;
   const page = pageDom.window.document.documentElement;
   const filePath = path.join(articlesDir, file);
   const updatedHTML = insertConfigDataIntoHTML(
     page.innerHTML,
     filePath,
-    configs.article.format,
+    config.format,
   );
   page.innerHTML = updatedHTML;
 
@@ -400,8 +401,8 @@ export async function populateHTMLFromConfigs(targetDir) {
  * Builds the site from the article and other configs, and the contents of the site/ directory
  */
 export async function generateSite(destDir, preferredPost) {
-  const { article } = configs;
-  let articleFiles = getFileDataByDate(articlesDir, article.format);
+  const config = configs.article || configs.main;
+  let articleFiles = getFileDataByDate(articlesDir, config.format);
   const preferred = preferredPost
     ? `${preferredPost}.${article.format}`
     : articleFiles[0].file;
@@ -418,7 +419,7 @@ export async function generateSite(destDir, preferredPost) {
 
     if (
       fs.statSync(articlePath).isFile() &&
-      articlePath.endsWith(`.${article.format}`)
+      articlePath.endsWith(`.${config.format}`)
     ) {
       const pageDom = await buildPageFromTemplates([templates.sidebar.name]);
       const isPreferred = file === preferred;

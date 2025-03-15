@@ -16,9 +16,10 @@ function verifyArticlesDir() {
     );
   }
 
+  const { format } = configs.article || configs.main;
   const articleFiles = fs
     .readdirSync(articlesDir)
-    .filter((file) => file.endsWith(configs.article.format));
+    .filter((file) => file.endsWith(format));
 
   if (articleFiles.length === 0)
     throw new Error(
