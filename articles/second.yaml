@@ -17,8 +17,7 @@ CONTENT: |
   Felis dis dictumst nostra elementum gravida blandit montes dui, bibendum nam cursus. Per eros elementum dictum dignissim vestibulum ultrices imperdiet scelerisque! Varius pretium urna aliquet fringilla blandit sit tortor cursus dignissim inceptos sollicitudin enim! Massa varius volutpat vitae suscipit habitasse faucibus curabitur ullamcorper sodales. Et porta venenatis dis phasellus libero tincidunt morbi. Posuere hendrerit himenaeos augue lacinia maecenas viverra sociis. Fermentum.
   </p>
   <pre>
-  <code>
-  async function createArticleYAML(fileName) {
+  <code class="hide-ln-numbers">async function createArticleYAML(fileName) {
     const article = templates.article;
 
     if (!fileName) {
@@ -44,6 +43,7 @@ CONTENT: |
 
     return newArticlePath;
   }
+
   </code>
   </pre>
   <p>

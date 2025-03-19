@@ -96,6 +96,14 @@
   line-height: 1.2rem;
 }
 
+#article-body td.hljs-ln-numbers {
+  padding-right: 1rem;
+}
+
+#article-body pre code.hide-ln-numbers td.hljs-ln-numbers {
+  display: none;
+}
+
 @media (max-width: 800px) {
   .content {
     width: 85%;
@@ -119,6 +127,11 @@
     margin-left: 0;
     margin-right: 0;
     width: 100%;
+  }
+
+  #article-body td.hljs-ln-numbers {
+    padding-right: 0;
+    display: none;
   }
 }
 
