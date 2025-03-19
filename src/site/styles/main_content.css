@@ -87,10 +87,8 @@
 
 #article-body pre code {
   border-radius: 10px;
-  padding-top: 1rem;
-  padding-bottom: 2rem;
+  padding: 1rem;
   padding-left: 1.6rem;
-  padding-right: 1rem;
   font-size: 0.8rem;
   letter-spacing: 0rem;
   line-height: 1.2rem;
