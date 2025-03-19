@@ -11,7 +11,9 @@ hljs.addPlugin(
 );
 
 hljs.highlightAll();
-hljs.initLineNumbersOnLoad();
+hljs.initLineNumbersOnLoad({
+    singleLine: true
+});
 
 function isInsideIframe() {
   return window.location !== window.parent.location;
