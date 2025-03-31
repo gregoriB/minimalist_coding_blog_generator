@@ -412,7 +412,12 @@ export async function generateSite(destDir, preferredPost) {
     ? path.join(templatesDir, `${templates.sidebar.name}.${fileFormats.html}`)
     : "";
 
-  const sidebarDom = await getFileDom(sidebarPath);
+  let sidebarDom;
+  try {
+    sidebarDom = await getFileDom(sidebarPath);
+  } catch (e) {
+    log(GRAY, "No sidebar template found. Skipping sidebar", CLEAR);
+  }
 
   for (const fileData of articleFiles) {
     const { file } = fileData;
@@ -431,7 +436,7 @@ export async function generateSite(destDir, preferredPost) {
         isPreferred,
       );
 
-      if (sidebarPath) {
+      if (sidebarDom) {
         await updateSidebar(sidebarDom, pageDom, fileData, articleBuiltName);
       }
     }
@@ -440,7 +445,7 @@ export async function generateSite(destDir, preferredPost) {
   log(GRAY, "Creating deployable build", CLEAR);
   copyDir(siteDir, buildDir, { minify: true });
 
-  if (sidebarPath) {
+  if (sidebarDom) {
     // Since the sidebar is updated in reverse order,
     // the order needs to be reversed before being added
     reverseElements(sidebarDom, "[data-find='side-bar-link-sections']");
