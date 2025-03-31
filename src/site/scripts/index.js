@@ -12,7 +12,7 @@ hljs.addPlugin(
 
 hljs.highlightAll();
 hljs.initLineNumbersOnLoad({
-    singleLine: true
+  singleLine: true,
 });
 
 function isInsideIframe() {
