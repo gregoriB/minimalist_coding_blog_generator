@@ -124,6 +124,13 @@ footer .social-links {
   display: none;
 }
 
+.social-links .link-icon {
+  height: 100%;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
 .social-github-logo {
   background-image: var(--logo-social-github);
 }
