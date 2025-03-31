@@ -86,15 +86,18 @@ code {
   margin-bottom: 20vh;
 }
 
-#footer-social-links {
+.social-links {
   display: flex;
   justify-content: space-evenly;
   flex-direction: row;
   width: 100%;
+}
+
+footer .social-links {
   max-width: 760px;
 }
 
-#footer-social-links a {
+.social-links a {
   display: inline-block;
   text-decoration: none;
   width: 4rem;
@@ -103,7 +106,7 @@ code {
   max-height: 30px;
 }
 
-#footer-social-links a div {
+.social-links a div {
   filter: grayscale(1);
   display: block;
   background-repeat: no-repeat;
@@ -115,36 +118,36 @@ code {
   height: 100%;
 }
 
-#footer-social-links A[href=""],
-#footer-social-links A[href="#"],
-#footer-social-links A:not([href]) {
+.social-links A[href=""],
+.social-links A[href="#"],
+.social-links A:not([href]) {
   display: none;
 }
 
-#social-github-logo {
+.social-github-logo {
   background-image: var(--logo-social-github);
 }
 
-#social-gitlab-logo {
+.social-gitlab-logo {
   background-image: var(--logo-social-gitlab);
   transform: scale(2);
 }
 
-#social-email-logo {
+.social-email-logo {
   background-image: var(--logo-social-email);
 }
 
-#social-x-logo {
+.social-x-logo {
   transform: scale(0.8);
   background-image: var(--logo-social-x);
 }
 
-#social-bmc-logo {
+.social-bmc-logo {
   transform: scale(1.1);
   background-image: var(--logo-social-bmc);
 }
 
-#social-patreon-logo {
+.social-patreon-logo {
   background-image: var(--logo-social-patreon);
 }
 
