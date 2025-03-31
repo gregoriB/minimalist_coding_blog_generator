@@ -390,7 +390,7 @@ export async function populateHTMLFromConfigs(targetDir) {
   for (let file of files) {
     const filePath = path.join(targetDir, file);
     const dom = await getFileDom(filePath, file);
-    await addHTMLFromTemplates(dom, [templates.sidebar.name]);
+    await addHTMLFromTemplates(dom, [templates.sidebar?.name]);
     populatePageFromConfigDirs(dom, [
       { dir: configs.main.dir, format: configs.main.format },
     ]);
@@ -408,10 +408,10 @@ export async function generateSite(destDir, preferredPost) {
     ? `${preferredPost}.${article.format}`
     : articleFiles[0].file;
 
-  const sidebarPath = path.join(
-    templatesDir,
-    `${templates.sidebar.name}.${fileFormats.html}`,
-  );
+  const sidebarPath = templates.sidebar
+    ? path.join(templatesDir, `${templates.sidebar.name}.${fileFormats.html}`)
+    : "";
+
   const sidebarDom = await getFileDom(sidebarPath);
 
   for (const fileData of articleFiles) {
@@ -422,7 +422,7 @@ export async function generateSite(destDir, preferredPost) {
       fs.statSync(articlePath).isFile() &&
       articlePath.endsWith(`.${config.format}`)
     ) {
-      const pageDom = await buildPageFromTemplates([templates.sidebar.name]);
+      const pageDom = await buildPageFromTemplates([templates.sidebar?.name]);
       const isPreferred = file === preferred;
       const articleBuiltName = createArticle(
         pageDom,
@@ -431,18 +431,22 @@ export async function generateSite(destDir, preferredPost) {
         isPreferred,
       );
 
-      await updateSidebar(sidebarDom, pageDom, fileData, articleBuiltName);
+      if (sidebarPath) {
+        await updateSidebar(sidebarDom, pageDom, fileData, articleBuiltName);
+      }
     }
   }
 
   log(GRAY, "Creating deployable build", CLEAR);
   copyDir(siteDir, buildDir, { minify: true });
 
-  // Since the sidebar is updated in reverse order,
-  // the order needs to be reversed before being added
-  reverseElements(sidebarDom, "[data-find='side-bar-link-sections']");
-  log(GRAY, "Adding updated side bar", CLEAR);
-  await addSidebarToFiles(sidebarDom);
+  if (sidebarPath) {
+    // Since the sidebar is updated in reverse order,
+    // the order needs to be reversed before being added
+    reverseElements(sidebarDom, "[data-find='side-bar-link-sections']");
+    log(GRAY, "Adding updated side bar", CLEAR);
+    await addSidebarToFiles(sidebarDom);
+  }
 
   // Update all HTML copied to the build/ directory with config data
   log(GRAY, "Updating build HTML files with data", CLEAR);
