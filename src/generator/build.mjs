@@ -31,7 +31,8 @@ function verifyArticlesDir() {
 
 function verifyPreferred(preferred) {
   if (!preferred) return;
-  const preferredFile = `${preferred}.${configs.article.format}`;
+  const { format } = configs.article || configs.main;
+  const preferredFile = `${preferred}.${format}`;
 
   if (!fs.existsSync(articlesDir + preferredFile)) {
     log("\n", RED, 'Article "', preferred, '" not found!', CLEAR, "\n");

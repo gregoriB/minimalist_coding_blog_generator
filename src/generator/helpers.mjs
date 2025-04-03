@@ -14,7 +14,8 @@ import {
   fileFormats,
 } from "./variables.mjs";
 const { GRAY, RED, CYAN, GREEN, BLUE, ORANGE, MAGENTA, CLEAR } = colors;
-const { articlesDir, siteDir, buildDir, templatesDir } = directories;
+const { articlesDir, siteDir, buildDir, templatesDir, configsDir } =
+  directories;
 
 export function getFiles(dir, fileExtension) {
   return fs.readdirSync(dir).filter((file) => file.endsWith(fileExtension));
@@ -196,6 +197,41 @@ async function createNewSidebarSection(title, url, month, year) {
   return sideBarDom;
 }
 
+function updateHTMLFromConfigs(html, configsArr = []) {
+  if (!configsArr.size) {
+    configsArr[0] = configs.main;
+  }
+  for (const { dir, format } of configsArr) {
+    const files = getFiles(dir, format);
+    files.forEach((file) => {
+      let configPath = path.join(dir, `${file}`);
+      html = insertConfigDataIntoHTML(html, configPath, format);
+    });
+  }
+
+  return html;
+}
+
+function getConfigProperty(key) {
+  const { dir, format } = configs.main;
+  const configPaths = getFiles(dir, format);
+  for (const path of configPaths) {
+    const configFile = fs.readFileSync(configsDir + path, "utf-8");
+    const parse = getConfigLoader(format);
+    const parsed = parse(configFile);
+    if (key in parsed) {
+      return parsed[key];
+    }
+  }
+
+  return "";
+}
+
+function updateSidebarHomeLink(dom) {
+  const sideBarHTML = dom.window.document.documentElement;
+  sideBarHTML.innerHTML = updateHTMLFromConfigs(sideBarHTML.innerHTML);
+}
+
 function reverseElements(dom, selector) {
   const parent = query(dom, selector);
   const children = Array.from(parent.children).reverse();
@@ -264,35 +300,6 @@ export function getConfigSerializer(format) {
   }
 }
 
-export function populatePageFromConfigsOld(pageDom, configs, article) {
-  const page = pageDom.window.document.documentElement;
-  let pageHTML = page.innerHTML;
-
-  for (let key in configs) {
-    const config = configs[key];
-    let configPath;
-    if (config.dir === configs.article.dir) {
-      if (!article) continue;
-
-      configPath = path.join(articlesDir, `${article}`);
-    } else {
-      configPath = path.join(config.dir, `${config.name}.${config.format}`);
-    }
-    const configFile = fs.readFileSync(configPath, "utf-8");
-    const parse = getConfigLoader(config.format);
-    const parsed = parse(configFile);
-    for (let key in parsed) {
-      let value = parsed[key];
-      if (!value) continue;
-
-      value = value instanceof Date ? value.toISOString() : value;
-      pageHTML = pageHTML.replaceAll(`{{${key}}}`, value);
-    }
-  }
-
-  page.innerHTML = pageHTML;
-}
-
 /**
  * Insert data from config into HTML
  */
@@ -317,15 +324,7 @@ export async function populatePageFromConfigDirs(pageDom, configs) {
   const page = pageDom.window.document.documentElement;
   let pageHTML = page.innerHTML;
 
-  for (const { dir, format } of configs) {
-    const files = getFiles(dir, format);
-    files.forEach((file) => {
-      let configPath = path.join(dir, `${file}`);
-      pageHTML = insertConfigDataIntoHTML(pageHTML, configPath, format);
-    });
-  }
-
-  page.innerHTML = pageHTML;
+  page.innerHTML = updateHTMLFromConfigs(pageHTML, configs);
 }
 
 async function addSidebarToFiles(sidebarDom) {
@@ -353,7 +352,7 @@ async function addSidebarToFiles(sidebarDom) {
 
 /**
  * Populates the DOM for the article page and writes it to a new HTML file.
- * If the article is the preferred article, it is also copied into an index.html file
+ * If the article is the preferred article, it is also copied into the specified homepage file
  */
 function createArticle(pageDom, destDir, file, isPreferred) {
   const config = configs.article || configs.main;
@@ -374,7 +373,9 @@ function createArticle(pageDom, destDir, file, isPreferred) {
 
   if (!isPreferred) return newName;
 
-  const indexPath = path.join(destDir, `index.${fileFormats.html}`);
+  const indexFile = getConfigProperty("SITE_HOME_PAGE");
+  console.log("index:", indexFile);
+  const indexPath = path.join(destDir, indexFile);
   fs.writeFileSync(indexPath, pageDom.serialize(), `utf8`);
   log(RED, indexPath, CLEAR, " file created from ", RED, file, CLEAR);
 
@@ -405,7 +406,7 @@ export async function generateSite(destDir, preferredPost) {
   const config = configs.article || configs.main;
   let articleFiles = getFileDataByDate(articlesDir, config.format);
   const preferred = preferredPost
-    ? `${preferredPost}.${article.format}`
+    ? `${preferredPost}.${config.format}`
     : articleFiles[0].file;
 
   const sidebarPath = templates.sidebar
@@ -436,8 +437,9 @@ export async function generateSite(destDir, preferredPost) {
         isPreferred,
       );
 
+      const sidebarLink = isPreferred ? "{{SITE_HOME_PAGE}}" : articleBuiltName;
       if (sidebarDom) {
-        await updateSidebar(sidebarDom, pageDom, fileData, articleBuiltName);
+        await updateSidebar(sidebarDom, pageDom, fileData, sidebarLink);
       }
     }
   }
@@ -449,6 +451,7 @@ export async function generateSite(destDir, preferredPost) {
     // Since the sidebar is updated in reverse order,
     // the order needs to be reversed before being added
     reverseElements(sidebarDom, "[data-find='side-bar-link-sections']");
+    updateSidebarHomeLink(sidebarDom);
     log(GRAY, "Adding updated side bar", CLEAR);
     await addSidebarToFiles(sidebarDom);
   }

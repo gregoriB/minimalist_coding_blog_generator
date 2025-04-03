@@ -1,4 +1,5 @@
 SITE_TITLE: "Blog Site"
+SITE_HOME_PAGE: index.html
 SOCIAL_URL_GITHUB: "https://github.com/gregoriB/minimalist_coding_blog_site_generator"
 SOCIAL_URL_GITLAB: "https://google.com"
 SOCIAL_URL_EMAIL: "webmaster@example.com"
